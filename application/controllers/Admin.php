@@ -2391,8 +2391,16 @@ class Admin extends MY_Controller
         $today = date('Y-m-d');
         
         $id = $this->showMatches();
-
-        $data['crickets'] = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' OR match_result = 'paused' AND event_id NOT IN ($id)");
+        if($this->showMatch == 'yes') {
+            if($id){
+                $data['crickets'] = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' OR match_result = 'paused' AND event_id NOT IN ($id)");
+            }else{
+                $data['crickets'] = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' OR match_result = 'paused'");
+            }
+        } else {
+            $data['cricket'] = array();
+        }
+        
 
         $this->load->view('layout/backend_sidebar');
         $this->load->view('admin/running_matches', $data);

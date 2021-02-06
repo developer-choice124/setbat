@@ -353,10 +353,12 @@ class Winner extends MY_Controller
                         }
                     }
                     if ($bet_type == 'unmatched') {
-                        if ($loss > $cuser->balanced_chips) {
-                            $place = 'no';
-                            $message = 'Unmatched bet could not be placed due to insufficient balance';
-                        }
+                        // if ($loss > $cuser->balanced_chips) {
+                        //     $place = 'no';
+                        //     $message = 'Unmatched bet could not be placed due to insufficient balance';
+                        // }
+                        $place =  "no";
+                        $message = "Unmatched bet Could not be placed";
                     }
 
                     if ($bet_type == 'matched') {

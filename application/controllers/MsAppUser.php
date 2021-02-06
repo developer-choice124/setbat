@@ -120,15 +120,44 @@ class MsAppUser extends MY_Controller
         echo $data;
     }
 
+    public function showMatches(){
+        $user_id = $this->session->userdata('user_id');
+        $EventList = $this->Common_model->get_data_by_query("SELECT * FROM event_block WHERE user_id IN ($user_id)");
+        $eventIds = [];
+        foreach($EventList as $list){
+            $event_ids = json_decode($list['event_id']);
+          $eventIds = array_merge($eventIds,$event_ids);
+        }
+
+        $id = '';
+
+        foreach($eventIds as $key => $eid){
+            if($key === 0){
+                $id .= $eid;
+            }else{
+                $id .=", ".$eid ;
+            }
+        }
+        
+        return $id;
+
+    }
+
     public function crickets()
     {
         $cuser = $this->MsAppUser_model->index();
         $hdata['heading'] = $this->panel->title;
         $hdata['cuser'] = $cuser;
+        
+        $id = $this->showMatches();
         $showMatch = $this->MsAppUser_model->showMatch();
         if($showMatch == 'yes') {
             $matches = array();
-            $matches = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' AND admin_enable = 'yes'");
+            if($id){
+                $matches = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' AND admin_enable = 'yes' AND event_id NOT IN ($id)");
+            }else{
+                $matches = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' AND admin_enable = 'yes'");
+            }
             foreach ($matches as $mkey => $m) {
                 $odds = $this->match->matchOddByMarketId($m['market_id']);
                 $matches[$mkey]['odds'] = $odds;
