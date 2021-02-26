@@ -35,7 +35,7 @@
                                   <th class="">Date </th>
                                   <th class="">Competition </th>
                                   <th class="">Type </th>
-                                  <th class="">Action </th>
+                                  <!-- <th class="">Action </th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,7 +46,7 @@
                                     <td><?=date('D d-M-Y H:i:sa',strtotime($c['start_date']));?></td>
                                     <td><?=$c['competition_name'];?></td>
                                     <td><?=$c['mtype'];?></td>
-                                    <td><a href="<?=base_url('Admin/enableBetting?event_id='.$c['event_id']);?>">Enable Betting</a></td>
+                                    <!-- <td><a href="<?=base_url('Admin/enableBetting?event_id='.$c['event_id']);?>">Enable Betting</a></td> -->
                                   </tr>
                                 <?php endforeach;?>
                             </tbody>

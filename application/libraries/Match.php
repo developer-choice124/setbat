@@ -5,12 +5,11 @@ class Match
 
     public function __construct()
     {
-        $this->CI = & get_instance();
+        $this->CI = &get_instance();
     }
 
     public function index()
     {
-
     }
 
     public function getData()
@@ -53,7 +52,7 @@ class Match
     public function matchOdd($marketId)
     {
         //$url = "http://rohitash.dream24.bet:3000/getmarket?id=" . $marketId;
-        $url = "http://betcric.in/test/Crons/matchOddLocal/".$marketId;
+        $url = "http://betcric.in/test/Crons/matchOddLocal/" . $marketId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -82,7 +81,7 @@ class Match
     public function fancyData($marketId)
     {
         //$url = "http://fancy.dream24.bet/price/?name=" . $marketId;
-        $url = "http://betcric.in/test/Crons/fanciesLocal/".$marketId;
+        $url = "http://betcric.in/test/Crons/fanciesLocal/" . $marketId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -102,7 +101,8 @@ class Match
         //print_r($result);die;
     }
 
-    public function calculateOddProfitLossByMarketId($uid,$mkid = null) {
+    public function calculateOddProfitLossByMarketId($uid, $mkid = null)
+    {
         $match = $this->CI->Common_model->get_single_query("SELECT * FROM running_matches WHERE market_id = $mkid");
         $runners = json_decode($match->teams);
         foreach ($runners as $rk => $r) {
@@ -114,18 +114,19 @@ class Match
         $res = array();
         foreach ($runners as $rk => $r) {
             $tid = $r->id;
-            $res[$rk]['pl'] = $this->calculateResult($allTeams,$rk);
-            $res[$rk]['id'] = $tid;  
+            $res[$rk]['pl'] = $this->calculateResult($allTeams, $rk);
+            $res[$rk]['id'] = $tid;
         }
         return $res;
     }
 
-    public function calculateProfitLossAllMatch($uid) {
+    public function calculateProfitLossAllMatch($uid)
+    {
         $mids = $this->CI->Common_model->get_data_by_query("SELECT DISTINCT(market_id) FROM bet WHERE user_id = $uid AND status='pending'");
         $matchedLoss = 0;
         $unmatchedLoss = 0;
         $fancyLoss = 0;
-        if(!empty($mids)) {
+        if (!empty($mids)) {
             foreach ($mids as $mk => $m) {
                 $market_id = $m['market_id'];
                 $Modds = $this->matchOddByMarketId($market_id);
@@ -139,19 +140,19 @@ class Match
                 $res = array();
                 foreach ($runners as $rk => $r) {
                     $tid = $r->id;
-                    $res[$rk]['pl'] = $this->calculateResult($allTeams,$rk);
-                    $res[$rk]['id'] = $tid;  
+                    $res[$rk]['pl'] = $this->calculateResult($allTeams, $rk);
+                    $res[$rk]['id'] = $tid;
                 }
                 //$res = array_values($res);
                 $numbers = array_column($res, 'pl');
                 $min = min($numbers);
-                if($min < 0) {
+                if ($min < 0) {
                     $matchedLoss += abs($min);
                 }
                 //unmatch loss
-                $unmatchedLoss += $this->calculateUnmatchedLoss($uid,$market_id);
+                $unmatchedLoss += $this->calculateUnmatchedLoss($uid, $market_id);
                 //fancy loss
-                $fancyLoss += $this->calculateFancyLoss($uid,$market_id);
+                $fancyLoss += $this->calculateFancyLoss($uid, $market_id);
             }
         }
 
@@ -163,7 +164,43 @@ class Match
         return $currentBal;
     }
 
-    function calculateFancyLoss($uid,$mkid = null) {
+    function calculateSingleFancyLoss($uid, $team = null, $mkid = null)
+    {
+        $total = 0;
+        $min = 0;
+        $plus = 0;
+        $minus = 0;
+        $record = $this->CI->Common_model->get_single_query("SELECT * FROM bet WHERE market_id='$mkid' AND team = '$team' AND user_id = $uid AND bet_type = 'fancy'");
+        $used = array();
+        $layUsed = array();
+        $backOdds = array();
+        $backIds = array();
+        $layMinusIds = array();
+        if ($record->back_lay == 'back' && !in_array($record->id, $backIds)) {
+            $backOdds[] = $record->odd;
+            $backIds[] = $record->id;
+            $plus += $record->loss;
+        }
+        if ($backOdds) {
+            $minBackOdd = min($backOdds);
+            $minloss = $this->CI->Common_model->ReadRaw("SELECT id,loss FROM bet WHERE back_lay = 'lay' AND odd < $minBackOdd AND market_id = '$mkid' AND team = '$team' and user_id = $uid and bet_type = 'fancy'");
+        } else {
+            $minloss = $this->CI->Common_model->ReadRaw("SELECT id,loss FROM bet WHERE back_lay = 'lay'  AND market_id = '$mkid' AND team = '$team' and user_id = $uid and bet_type = 'fancy'");
+        }
+        for ($j = 0; $j < count($minloss); $j++) {
+            $min += $minloss[$j]->loss;
+            $layUsed[] = $minloss[$j]->id;
+        }
+        if ($record->back_lay == 'lay' && !in_array($record->id, $layUsed) && !in_array($record->id, $layMinusIds)) {
+            $minus += $record->loss;
+            $layMinusIds[] = $record->id;
+        }
+        $total = abs($plus - $minus) + $min;
+        return $total;
+    }
+
+    function calculateFancyLoss($uid, $mkid = null)
+    {
         $list = $this->CI->Common_model->ReadRaw("SELECT * FROM bet WHERE market_id='$mkid' AND user_id = $uid AND bet_type = 'fancy' AND status = 'pending'");
         $outlist = array();
         foreach ($list as $record) {
@@ -209,10 +246,11 @@ class Match
         return $total;
     }
 
-    function calculateUnmatchedLoss($uid,$mkid = null) {
+    function calculateUnmatchedLoss($uid, $mkid = null)
+    {
         $bets = $this->CI->Common_model->get_data_by_query("SELECT * FROM bet WHERE bet_type = 'unmatched' AND user_id = $uid AND market_id = '$mkid' AND status = 'pending'");
         $unmatchedLoss = 0;
-        if(!empty($bets)) {
+        if (!empty($bets)) {
             foreach ($bets as $bk => $b) {
                 $unmatchedLoss += $b['loss'];
             }
@@ -223,9 +261,10 @@ class Match
     function calculateResult($input_array, $index)
     {
         $final = 0;
-        $plus = array(); $minus = array();
-        for($i = 0; $i < count($input_array); $i++) {
-            if($i == $index) {
+        $plus = array();
+        $minus = array();
+        for ($i = 0; $i < count($input_array); $i++) {
+            if ($i == $index) {
                 $plus[$i] = $input_array[$i]['back']->p;
                 $minus[$i] = $input_array[$i]['lay']->l;
                 $final += ($input_array[$i]['back']->p - $input_array[$i]['lay']->l);
@@ -238,15 +277,16 @@ class Match
         return $final;
     }
 
-    public function maxLimitByMarketId($uid,$mkid = null) {
+    public function maxLimitByMarketId($uid, $mkid = null)
+    {
         $mids = $this->CI->Common_model->get_data_by_query("SELECT DISTINCT(market_id) FROM bet WHERE user_id = $uid AND status='pending'");
         $matchedLoss = 0;
         $unmatchedLoss = 0;
         $fancyLoss = 0;
-        if(!empty($mids)) {
+        if (!empty($mids)) {
             foreach ($mids as $mk => $m) {
                 $market_id = $m['market_id'];
-                if($market_id == $mkid) {
+                if ($market_id == $mkid) {
                     continue;
                 } else {
                     $Modds = $this->matchOddByMarketId($market_id);
@@ -260,13 +300,13 @@ class Match
                     $res = array();
                     foreach ($runners as $rk => $r) {
                         $tid = $r->id;
-                        $res[$rk]['pl'] = $this->calculateResult($allTeams,$rk);
-                        $res[$rk]['id'] = $tid;  
+                        $res[$rk]['pl'] = $this->calculateResult($allTeams, $rk);
+                        $res[$rk]['id'] = $tid;
                     }
                     //$res = array_values($res);
                     $numbers = array_column($res, 'pl');
                     $min = min($numbers);
-                    if($min < 0) {
+                    if ($min < 0) {
                         $matchedLoss += abs($min);
                     }
                 }
@@ -285,7 +325,8 @@ class Match
         return $currentBal;
     }
 
-    public function teamsByMarketId($marketId) {
+    public function teamsByMarketId($marketId)
+    {
         $q = $this->CI->Common_model->get_single_query("SELECT teams FROM cron_data WHERE market_id = '$marketId'");
         $teams = json_decode($q->teams);
         return $teams;
@@ -293,8 +334,7 @@ class Match
 
     public function oldmatchOddByMarketId($marketId)
     {
-        
-        $url = "http://178.79.131.131/api/v1/listMarketBookOdds?market_id=".$marketId;
+        $url = "http://178.79.131.131/api/v1/listMarketBookOdds?market_id=" . $marketId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -314,17 +354,16 @@ class Match
         $teams = $this->teamsByMarketId($marketId);
         foreach ($runners as $rk => $r) {
             $teams[$rk]->back = $r['back'][0];
-            $teams[$rk]->lay = $r['lay'][0]; 
+            $teams[$rk]->lay = $r['lay'][0];
         }
         $result[0]['teams'] = $teams;
         return $result;
-
     }
 
-    public function matchOddByMarketId($mkid) {
-        
-        $CI =& get_instance();
-        $url = $CI->utils->absolute("/api/v1/listMarketBookOdds?market_id=".$mkid);
+    public function matchOddByMarketId($mkid)
+    {
+        $CI = &get_instance();
+        $url = $CI->utils->absolute("/api/v1/listMarketBookOdds?market_id=" . $mkid);
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -344,15 +383,16 @@ class Match
         $teams = $this->teamsByMarketId($mkid);
         foreach ($runners as $rk => $r) {
             $teams[$rk]->back = $r['ex']['availableToBack'][0];
-            $teams[$rk]->lay = $r['ex']['availableToLay'][0]; 
+            $teams[$rk]->lay = $r['ex']['availableToLay'][0];
         }
         $result[0]['teams'] = $teams;
         return $result;
     }
 
-    public function matchFancyByMarketId($mid) {
-        $CI =& get_instance();
-        $url = $CI->utils->absolute("/api/v1/listMarketBookSession?match_id=".$mid);
+    public function matchFancyByMarketId($mid)
+    {
+        $CI = &get_instance();
+        $url = $CI->utils->absolute("/api/v1/listMarketBookSession?match_id=" . $mid);
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -371,9 +411,10 @@ class Match
         return $result;
     }
 
-    public function matchFancies($mid) {
-        $CI =& get_instance();
-        $url = $CI->utils->absolute("/api/v1/listMarketBookSession?match_id=".$mid);
+    public function matchFancies($mid)
+    {
+        $CI = &get_instance();
+        $url = $CI->utils->absolute("/api/v1/listMarketBookSession?match_id=" . $mid);
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -390,7 +431,7 @@ class Match
         curl_close($curl);
         $result = json_decode($response, true);
         $a = array();
-        if(!empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $r) {
                 $a[$r['SelectionId']] = $r;
             }
@@ -400,7 +441,7 @@ class Match
 
     public function oldmatchFancyByMarketId($marketId)
     {
-        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=".$marketId;
+        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=" . $marketId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -421,7 +462,7 @@ class Match
 
     public function oldmatchFancies($marketId)
     {
-        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=".$marketId;
+        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=" . $marketId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -438,7 +479,7 @@ class Match
         curl_close($curl);
         $result = json_decode($response, true);
         $a = array();
-        if(!empty($result)) {
+        if (!empty($result)) {
             foreach ($result[0]['value']['session'] as $r) {
                 $a[$r['SelectionId']] = $r;
             }
@@ -448,7 +489,7 @@ class Match
 
     public function cricketScore($matchId)
     {
-        $url = "https://www.cricbuzz.com/api/cricket-match/commentary/".$matchId;
+        $url = "https://www.cricbuzz.com/api/cricket-match/commentary/" . $matchId;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,

@@ -8,7 +8,7 @@ class Auth extends CI_Controller {
 		$this->load->database();
 		$this->load->library(array('ion_auth','form_validation'));
 		$this->load->helper(array('url','language'));
-		// $this->load->model('MyModel');
+		$this->load->model('MyModel');
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 		$this->lang->load('auth');
 	}
@@ -16,7 +16,6 @@ class Auth extends CI_Controller {
 	// redirect if needed, otherwise display the user list
 	public function index()
 	{
-		
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -131,7 +130,6 @@ class Auth extends CI_Controller {
 	// log the user in
 	public function login()
 	{
-		
 		$this->data['title'] = $this->lang->line('login_heading');
 
 		//validate form input
@@ -1025,7 +1023,7 @@ class Auth extends CI_Controller {
         //echo $this->email->print_debugger(); die;
     }
 	//API Functions start from here
-	/* public function jlogin()
+	public function jlogin()
 	{
 		$params = $_REQUEST;		        
         $response = $this->MyModel->logins($params);
@@ -1154,7 +1152,7 @@ class Auth extends CI_Controller {
 			$response = $this->MyModel->change_password($params);
 			$this->json_output($response['status'], $response);
 		}
-	} */
+	}
 	function json_output($statusHeader,$response)
 	{
 		$ci =& get_instance();

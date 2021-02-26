@@ -28,8 +28,9 @@ class MsAppUser_model extends CI_Model
     $user = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $this->id");
     $master = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $user->parent_id");
     $smaster = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $master->parent_id");
+    $admin = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $smaster->parent_id");
     $lock = 'no';
-    if ($user->lock_betting == 'yes' || $master->lock_betting == 'yes' || $smaster->lock_betting == 'yes') {
+    if ($user->lock_betting == 'yes' || $master->lock_betting == 'yes' || $smaster->lock_betting == 'yes' || $admin->lock_betting == 'yes') {
       $lock = 'yes';
     }
     return $lock;
@@ -40,8 +41,9 @@ class MsAppUser_model extends CI_Model
     $user = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $this->id");
     $master = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $user->parent_id");
     $smaster = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $master->parent_id");
+    $admin = $this->Common_model->get_single_query("SELECT * FROM users WHERE id = $smaster->parent_id");
     $show = 'yes';
-    if ($user->show_match == 'no' || $master->show_match == 'no' || $smaster->show_match == 'no') {
+    if ($user->show_match == 'no' || $master->show_match == 'no' || $smaster->show_match == 'no' || $admin->show_match == 'no') {
       $show = 'no';
     }
     return $show;

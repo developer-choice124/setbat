@@ -40,14 +40,15 @@
         <div class="col-sm-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                     <?=$match->event_name;?> 
-                    <div class="pull-right"><a href="<?=base_url('Master/runningCricket');?>">Running Matches</a><a href="#" data-perform="panel-collapse"><i class="ti-minus"></i></a></div>
+                    <span class="small"><?=$match->event_name;?></span>
+                    <div class="pull-right"><a href="<?=base_url('Master/runningCricket');?>">Back</a><a href="#" data-perform="panel-collapse"><i class="ti-minus"></i></a></div>
                 </div>
                 <div class="panel-body">
                     <div id="message"><?php if ($this->session->flashdata('message')) {
                           echo $this->session->flashdata('message');
                         } ?>
                     </div>
+                    <div id="scoreReload"></div>
                     <div class="row">
                       <div class="col-md-7">
                         <div class="row">
@@ -76,10 +77,9 @@
                             <div class="table-responsive" id="fancyTable">
                               <table class="table table-bordered" width="100%">
                                 <tr>
-                                  <th style="border: none !important;" width="63%"></th>
-                                  <th style="background: red; color: white; border: none !important; min-width: 50px; max-width: 50px;"><center>NO(L)</center></th>
-                                  <th style="background: #2c5ca9; color: white; border: none !important; min-width: 50px;  max-width: 50px;"><center>YES(B)</center></th>
-                                  <th width="17%"></th>
+                                  <th style="border: none !important;" width="50%"></th>
+                                  <th style="background: red; color: white; border: none !important;" width="25%"><center>NO(L)</center></th>
+                                  <th style="background: #2c5ca9; color: white; border: none !important;" width="25%"><center>YES(B)</center></th>
                                 </tr>
                                 <?php if($dfancy) {
                                   $did = array();
@@ -94,7 +94,6 @@
                                           <td><?=$f['RunnerName'];?><span class="pull-right"><button class="btn btn-warning btn-sm" onclick="getBookedFancy('<?=$f['RunnerName'];?>','<?=$match->market_id;?>')" data-toggle="modal" data-target="#bookFancyModal">book</button></span></td>
                                           <td style="background-color: #ffbfcd; cursor: pointer; text-align: center;"><b><?=$f['LayPrice1'];?></b><br><?=$f['LaySize1'];?></td>
                                           <td style="background-color: #b5e0ff; cursor: pointer; text-align: center;"><b><?=$f['BackPrice1'];?></b><br><?=$f['BackSize1'];?></td>
-                                          <td></td>
                                         </tr>
                                       <?php } ?>
                                     <?php } ?>
@@ -273,7 +272,20 @@
       pana = setInterval("panaReload()", 5000);
       //pp = setInterval("profitNLoss()", 5000);
       profitNLoss();
+      scoreReload();
     });
+
+    function scoreReload() {
+      $.ajax({
+          url: "<?php echo site_url('Master/scoreReload?market_id=') ?>" + marketId + "&match_id=" + matchId,
+          type: "POST",
+          dataType: 'json',
+          success: function (data, textStatus, jqXHR) {
+              $("#scoreReload").html(data.score);
+              setTimeout( scoreReload, 5000);
+          }
+      });
+    }
 
     function profitNLoss() {
       $.ajax({
