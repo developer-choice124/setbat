@@ -46,6 +46,7 @@
         </div>
         <!-- Tab panes -->
         <div class="card-body" style="padding: 0 !important;">
+          <div id="scoreReload"></div>
           <div id="betMessage"></div>
           <div class="row">
             <div class="col-6 border">
@@ -260,6 +261,7 @@
   var betType = 'matched';
   $(document).ready(function () {
     callAsync();
+    scoreReload();
   });
   function callAsync() {
     $.ajax({
@@ -271,6 +273,18 @@
             $("#matchFancy").html(data.fancyData);
             calculateProfitLoss();
             setTimeout( callAsync, 1200);
+        }
+    });
+  }
+
+  function scoreReload() {
+    $.ajax({
+        url: "<?php echo site_url('MsAppUser/scoreReload?market_id=') ?>" + marketId + "&match_id=" + matchId,
+        type: "POST",
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR) {
+            $("#scoreReload").html(data.score);
+            setTimeout( scoreReload, 5000);
         }
     });
   }
@@ -478,11 +492,11 @@
   }
 
   function checkLimitBeforBetPlace() {
-    if (amount >= 500 && amount <= 500000) {
+    if (amount >= 500 && amount <= 200000) {
         $('.loader').show();
         setTimeout(function () { placeBet(); }, 2000);
     } else {
-        swal('bet stake should be greater than 500 & less than 500000');
+        swal('bet stake should be greater than 500 & less than 200000');
     }
   }
 

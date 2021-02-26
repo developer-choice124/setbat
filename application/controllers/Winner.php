@@ -142,6 +142,29 @@ class Winner extends MY_Controller
         return $data;
     }
 
+    public function scoreReload() {
+        $mkid = $this->input->get('market_id');
+        $mid = $this->input->get('match_id');
+        $match = $this->Common_model->get_single_query("SELECT * FROM running_matches WHERE market_id = '$mkid' AND event_id = $mid");
+        $score = '';
+        if(isset($match) && ($match->cricbuzz_id != '' || $match->cricbuzz_id != null)) {
+            $scoreData = $this->match->cricketScore($match->cricbuzz_id);
+            $miniscore = $scoreData['miniscore'];
+            // print_r($scoreData['miniscore']);die;
+            $score .= '<p class="text-danger">'.$miniscore['matchScoreDetails']['customStatus'].'</p>';
+            $score .= '<table class="table table-bordered table-sm table-striped"><tbody>';
+            foreach ($miniscore['matchScoreDetails']['inningsScoreList'] as $key => $sc) {
+                $score .= '<tr><td>'.$sc['batTeamName'].' '.$sc['score'].'/'.$sc['wickets'].' ('.$sc['overs'].' ov)</td></tr>';
+            }
+            $score .= '<tr><th><div class="d-flex justify-content-between mb-3"><div class="p-2 ">Cur Ov '.$miniscore['overs'].'</div><div class="p-2">Runrate '.$miniscore['currentRunRate'].'</div></div></th></tr>';
+            $score .= '<tr><th>Recent Stats '.$miniscore['recentOvsStats'].'</th></tr>';
+
+        }
+        echo json_encode(array(
+            'score' => $score
+        ));
+    }
+
     public function fancyReload($mkid, $mid)
     {
         $dfancy = $this->Common_model->get_data_by_query("SELECT * FROM fancy_data WHERE market_id = '$mkid' AND status NOT IN ('settled','paused')");
@@ -277,6 +300,121 @@ class Winner extends MY_Controller
                 ));
             } else {
                 $checkFancy = '';
+                // if ($bet_type == 'fancy') {
+                //     $fancy = $this->match->matchFancies($match_id);
+                //     // $fancies = $fancy['session'];
+                //     $cFancy = $fancy[$team_id];
+                //     if ($cFancy['GameStatus'] == '') {
+                //         $frodd = $back_lay == 'back' ? $cFancy['BackPrice1'] : $cFancy['LayPrice1'];
+                //         $frline = $back_lay == 'back' ? $cFancy['BackSize1'] : $cFancy['LaySize1'];
+                //         $profit = $back_lay == 'back' ? ($line * $stake) / 100 : $stake;
+                //         $loss = $back_lay == 'back' ? $stake : ($line * $stake) / 100;
+                //         if ($odd > 0 && is_numeric($odd)) {
+                //             if ($frodd != $odd || $frline != $line) {
+                //                 $place = 'no';
+                //                 $message = 'Fancy bet could not be placed1';
+                //             } else {
+                //                 $place = 'yes';
+                //             }
+                //         } else {
+                //             $place = 'no';
+                //             $message = 'Fancy bet could not be placed2';
+                //         }
+                //         $checkFancy = $cFancy['RunnerName'];
+                //     } else {
+                //         $place = 'no';
+                //         $message = 'Fancy bet could not be placed3';
+                //     }
+                //     if (empty($checkFancy) || $checkFancy == null || strlen($checkFancy) == 0) {
+                //         $place = 'no';
+                //         $message = 'Fancy bet could not be placed4';
+                //     }
+                //     if ($place == 'yes') {
+                //         $flm = 0;
+                //         if ($back_lay == 'back') {
+                //             $fbl = $this->Common_model->get_single_query("SELECT SUM(loss) as l FROM bet WHERE user_id = $this->id AND market_id = '$market_id' AND back_lay = 'lay' AND bet_type = 'fancy' AND team = '$team' AND odd >= '$odd'");
+                //             $fmp = $this->Common_model->get_single_query("SELECT SUM(loss) as l FROM bet WHERE user_id = $this->id AND market_id = '$market_id' AND back_lay = 'back' AND bet_type = 'fancy' AND team = '$team' AND odd <= '$odd'");
+                //         } else {
+                //             $fbl = $this->Common_model->get_single_query("SELECT SUM(loss) as l FROM bet WHERE user_id = $this->id AND market_id = '$market_id' AND back_lay = 'back' AND bet_type = 'fancy' AND team = '$team' AND odd <= '$odd'");
+                //             $fmp = $this->Common_model->get_single_query("SELECT SUM(loss) as l FROM bet WHERE user_id = $this->id AND market_id = '$market_id' AND back_lay = 'lay' AND bet_type = 'fancy' AND team = '$team' AND odd >= '$odd'");
+                //         }
+                //         if (isset($fbl) && isset($fbl->l)) {
+                //             $flm = 2 * ($fbl->l - ($fmp ? $fmp->l : 0));
+                //         }
+                //         $actualLoss = abs($flm) + $cuser->balanced_chips;
+                //         if ($loss > $actualLoss) {
+                //             $place = 'no';
+                //             $message = 'Fancy bet could not be placed due to insufficient balance5';
+                //         }
+                //     }
+                // } else {
+                //     foreach ($runners as $rk => $r) {
+                //         if ($r->id == $team_id) {
+                //             if ($back_lay == 'back') {
+                //                 $rodd = $r->back['price'];
+                //                 if ($rodd >= $odd) {
+                //                     $odd = $rodd;
+                //                     $profit = ($rodd * $stake) - $stake;
+                //                     $loss = $stake;
+                //                 } else {
+                //                     $bet_type = 'unmatched';
+                //                     $profit = ($odd * $stake) - $stake;
+                //                     $loss = $stake;
+                //                 }
+                //             } else {
+                //                 $rodd = $r->lay['price'];
+                //                 if ($rodd <= $odd) {
+                //                     $odd = $rodd;
+                //                     $profit = $stake;
+                //                     $loss = ($rodd * $stake) - $stake;
+                //                 } else {
+                //                     $bet_type = 'unmatched';
+                //                     $profit = $stake;
+                //                     $loss = ($odd * $stake) - $stake;
+                //                 }
+                //             }
+                //         }
+                //     }
+                //     if ($bet_type == 'unmatched') {
+                //         if ($loss > $cuser->balanced_chips) {
+                //             $place = 'no';
+                //             $message = 'Unmatched bet could not be placed due to insufficient balance';
+                //         }
+                //     }
+
+                //     if ($bet_type == 'matched') {
+                //         $limit = $this->match->maxLimitByMarketId($this->id, $market_id);
+                //         $res = $this->match->calculateOddProfitLossByMarketId($this->id, $market_id);
+                //         foreach ($res as $rk => $rv) {
+                //             if ($back_lay == 'back') {
+                //                 if ($team_id == $rv['id']) {
+                //                     $res[$rk]['pl'] = $rv['pl'] + $profit;
+                //                 } else {
+                //                     $res[$rk]['pl'] = $rv['pl'] - $loss;
+                //                 }
+                //             } else {
+                //                 if ($team_id == $rv['id']) {
+                //                     $res[$rk]['pl'] = $rv['pl'] - $loss;
+                //                 } else {
+                //                     $res[$rk]['pl'] = $rv['pl'] + $profit;
+                //                 }
+                //             }
+                //         }
+                //         $numbers = array_column($res, 'pl');
+                //         $max = min($numbers);
+                //         $uloss = $this->match->calculateUnmatchedLoss($this->id, $market_id);
+                //         $maxFinal = $max + $uloss;
+                //         if (abs($maxFinal) > $limit) {
+                //             $place = 'no';
+                //             $message = 'Bet Can not be placed because loss is higher than balanced chips';
+                //         }
+                //     }
+                //     if ($odd >= 4) {
+                //         $place = 'no';
+                //         $ok = 'no';
+                //         $message = 'Bet Can not be placed as odd is above 4';
+                //     }
+                // }
                 if ($bet_type == 'fancy') {
                     $fancy = $this->match->matchFancies($match_id);
                     // $fancies = $fancy['session'];
@@ -316,9 +454,16 @@ class Winner extends MY_Controller
                             $fmp = $this->Common_model->get_single_query("SELECT SUM(loss) as l FROM bet WHERE user_id = $this->id AND market_id = '$market_id' AND back_lay = 'lay' AND bet_type = 'fancy' AND team = '$team' AND odd >= '$odd'");
                         }
                         if (isset($fbl) && isset($fbl->l)) {
-                            $flm = 2 * ($fbl->l - ($fmp ? $fmp->l : 0));
+                            $flm = 2 * ($fbl->l) - ($fmp ? $fmp->l : 0);
                         }
-                        $actualLoss = abs($flm) + $cuser->balanced_chips;
+                        if($flm < 0) {
+                            $actualLoss = $cuser->balanced_chips;
+                        } else {
+                            $actualLoss = abs($flm) + $cuser->balanced_chips;
+                        }
+
+                        
+                        // echo $cuser->balanced_chips; print_r($fmp); print_r($fbl); echo $actualLoss.'<br/>'.$flm;  die;
                         if ($loss > $actualLoss) {
                             $place = 'no';
                             $message = 'Fancy bet could not be placed due to insufficient balance5';
@@ -353,17 +498,20 @@ class Winner extends MY_Controller
                         }
                     }
                     if ($bet_type == 'unmatched') {
-                        // if ($loss > $cuser->balanced_chips) {
-                        //     $place = 'no';
-                        //     $message = 'Unmatched bet could not be placed due to insufficient balance';
-                        // }
-                        $place =  "no";
-                        $message = "Unmatched bet Could not be placed";
+                        if ($loss > $cuser->balanced_chips) {
+                            $place = 'no';
+                            $message = 'Unmatched bet could not be placed due to insufficient balance';
+                        }
                     }
 
                     if ($bet_type == 'matched') {
-                        $limit = $this->match->maxLimitByMarketId($this->id, $market_id);
+                        // $limit = $this->match->maxLimitByMarketId($this->id, $market_id);
                         $res = $this->match->calculateOddProfitLossByMarketId($this->id, $market_id);
+                        $earlier = array_column($res, 'pl');
+                        $min = min($earlier);
+                        $earlierMax = 0;
+                        if($min < 0) $earlierMax = $min;
+                        $newLimit = $cuser->balanced_chips + abs($earlierMax);
                         foreach ($res as $rk => $rv) {
                             if ($back_lay == 'back') {
                                 if ($team_id == $rv['id']) {
@@ -381,12 +529,18 @@ class Winner extends MY_Controller
                         }
                         $numbers = array_column($res, 'pl');
                         $max = min($numbers);
-                        $uloss = $this->match->calculateUnmatchedLoss($this->id, $market_id);
-                        $maxFinal = $max + $uloss;
-                        if (abs($maxFinal) > $limit) {
+                        if($max < 0 && (abs($max) > $newLimit)) {
                             $place = 'no';
                             $message = 'Bet Can not be placed because loss is higher than balanced chips';
                         }
+                        // $uloss = $this->match->calculateUnmatchedLoss($this->id, $market_id);
+                        // $maxFinal = $max + $uloss;
+                        // echo $max.'===='.$uloss."=======".$limit."=============".$cuser->balanced_chips."==========".$earlierMax;
+                        // print_r($res);die;
+                        // if (abs($max) > $newLimit) {
+                        //     $place = 'no';
+                        //     $message = 'Bet Can not be placed because loss is higher than balanced chips';
+                        // }
                     }
                     if ($odd >= 4) {
                         $place = 'no';
@@ -460,7 +614,7 @@ class Winner extends MY_Controller
                     echo json_encode(array(
                         'message'   => $message,
                         'class'     => $place == 'yes' ? 'alert-success' : 'alert-danger',
-                        'bal'       => $balLeft
+                        'bal'       => round($balLeft,2)
                     ));
                 }
                 //$balLeft = $this->getBalance();

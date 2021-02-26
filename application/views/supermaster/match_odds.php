@@ -40,14 +40,15 @@
         <div class="col-sm-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                     <?=$match->event_name;?> 
-                    <div class="pull-right"><a href="<?=base_url('SuperMaster/runningCricket');?>">Running Matches</a><a href="#" data-perform="panel-collapse"><i class="ti-minus"></i></a></div>
+                  <span class="small"><?=$match->event_name;?></span>
+                  <div class="pull-right"><a href="<?=base_url('SuperMaster/runningCricket');?>">Back</a><a href="#" data-perform="panel-collapse"><i class="ti-minus"></i></a></div>
                 </div>
                 <div class="panel-body">
                     <div id="message"><?php if ($this->session->flashdata('message')) {
                           echo $this->session->flashdata('message');
                         } ?>
                     </div>
+                    <div id="scoreReload"></div>
                     <div class="row">
                       <div class="col-md-7">
                         <div class="row">
@@ -268,7 +269,20 @@
       bets = setInterval("betReload()", 30000);
       pana = setInterval("panaReload()", 5000);
       profitNLoss();
+      scoreReload();
     });
+
+    function scoreReload() {
+      $.ajax({
+          url: "<?php echo site_url('SuperMaster/scoreReload?market_id=') ?>" + marketId + "&match_id=" + matchId,
+          type: "POST",
+          dataType: 'json',
+          success: function (data, textStatus, jqXHR) {
+              $("#scoreReload").html(data.score);
+              setTimeout( scoreReload, 5000);
+          }
+      });
+    }
 
     function profitNLoss() {
       $.ajax({

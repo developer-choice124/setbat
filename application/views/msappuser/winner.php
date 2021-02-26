@@ -58,6 +58,7 @@
         </div>
         <!-- Tab panes -->
         <div class="card-body" style="padding: 0 !important;">
+          <div id="scoreReload"></div>
           <div id="betMessage"></div>
           <div class="row">
             <div class="col-6 border">
@@ -215,7 +216,7 @@
               <center>Yes</center>
             </div>
           </div>
-          <div id="matchFancy">
+          <div id="matchFancy" style="max-height: 200px;overflow-y: scroll;">
             
           </div>
         </div>
@@ -241,6 +242,7 @@
   $(document).ready(function () {
     callAsync();
     callFancy();
+    scoreReload();
   });
   function callAsync() {
     $.ajax({
@@ -251,6 +253,18 @@
             $("#matchOdd").html(data.oddData);
             calculateProfitLoss();
             setTimeout( callAsync, 1200);
+        }
+    });
+  }
+
+  function scoreReload() {
+    $.ajax({
+        url: "<?php echo site_url('Winner/scoreReload?market_id=') ?>" + marketId + "&match_id=" + matchId,
+        type: "POST",
+        dataType: 'json',
+        success: function (data, textStatus, jqXHR) {
+            $("#scoreReload").html(data.score);
+            setTimeout( scoreReload, 5000);
         }
     });
   }
@@ -404,11 +418,11 @@
   }
 
   function checkLimitBeforBetPlace() {
-    if (amount >= 300 && amount <= 500000) {
+    if (amount >= 500 && amount <= 200000) {
         $('.loader').show();
         setTimeout(function () { placeBet(); }, 5000);
     } else {
-        swal('bet stake should be greater than 100 & less than 500000');
+        swal('bet stake should be greater than 500 & less than 200000');
     }
   }
 
