@@ -18,76 +18,111 @@ class Crons extends MY_Controller
         $this->load->library('match');
     }
 
-    public function index() {
-        $crickets = $this->getAllMatchesSortBySeries();
+    public function index(){
+        $crickets = $this->matches();
+        
+        foreach($crickets->data as $ck => $c){
+            $details = $this->matchesDetails($c->EventId);
+            
+            $crickets->data[$ck]->detail = $details->data ? $details->data[0] : "";
+        }
         $today = date('Y-m-d');
-        foreach ($crickets as $ck => $c) {
-            if($c['market'] && !empty($c['market'])) {
-                $marketId = $c['market']['marketId'];
-                $eventId = $c['event']['id'];
-                $edate = date('Y-m-d H:i:s', strtotime($c['event']['openDate']));
-                $teams = $c['market']['runners'];
-                $allTeams = array();
-                foreach($teams as $t):
-                    $obj = new stdClass();
-                    $obj->id = $t['selectionId'];
-                    $obj->name = $t['runnerName'];
-                    $allTeams[] = $obj;
-                endforeach;
-                $match = $this->Common_model->get_single_query("SELECT * FROM cron_data WHERE market_id = '$marketId'");
-                if(!empty($match)) {
-                    
-                } else {
+        foreach($crickets->data as $ck => $c){
+            $match = $this->Common_model->get_single_query("SELECT * FROM cron_data WHERE market_id =". $c->detail->MarketId);
+            if(!empty($match)) {
+                
+            }else{
+                    $edate = date('Y-m-d H:i:s', strtotime($c->EventDate));
                     $data = array(
-                        'market_id' => $marketId,
-                        'event_id' => $c['event']['id'],
-                        'event_name' => $c['event']['name'],
+                        'market_id' => $c->detail->MarketId,
+                        'event_id' => $c->EventId,
+                        'event_name' => $c->EventName,
                         'event_date' => $edate,
                         'event_typeid' => 4,
-                        'competition_id' => $c['series']['competition']['id'],
-                        'competition_name' => $c['series']['competition']['name'],
+                        'competition_id' => "",
+                        'competition_name' => "",
                         'start_date' => $edate,
-                        'btype' => $c['market']['marketName'],
-                        'mtype' => $c['market']['marketName'],
-                        'teams' => json_encode($allTeams),
+                        'btype' => $c->detail->MarketName,
+                        'mtype' => $c->detail->MarketName,
+                        'teams' => "",
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                     );
                     $this->Crud_model->insert_record('cron_data', $data);
                 }
-                $fancies = $this->matchSessionByMatchId($eventId);
-                if(!empty($fancies)) {
-                    foreach ($fancies as $fk => $f) {
-                        $fid = $f['SelectionId'];
-                        $fname = $f['RunnerName'];
-                        $fan = $this->Common_model->get_single_query("select * from fancy_data where fancy_name = '$fname' and market_id = '$marketId'");
-                        if($fan) {
-                            continue;
-                        }
-                        $fdata = array(
-                            'fancy_id' => $f['SelectionId'],
-                            'fancy_name' => $f['RunnerName'],
-                            'market_id' => $marketId,
-                            'event_id' => $eventId,
-                            'event_name' => $c['event']['name'],
-                            'event_date' => $edate,
-                            'event_typeid' => 4,
-                            'competition_id' => $c['series']['competition']['id'],
-                            'competition_name' => $c['series']['competition']['name'],
-                            'start_date' => $edate,
-                            'mtype' => $c['market']['marketName'],
-                            'odds_type' => 'fancy',
-                            'status' => $f['GameStatus'],
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s'),
-                        );
-                        $this->Crud_model->insert_record('fancy_data',$fdata);
-                    }
-                }
-            }
         }
-        echo 'done';
     }
+
+    // public function index() {
+    //     $crickets = $this->getAllMatchesSortBySeries();
+    //     $today = date('Y-m-d');
+    //     foreach ($crickets as $ck => $c) {
+    //         if($c['market'] && !empty($c['market'])) {
+    //             $marketId = $c['market']['marketId'];
+    //             $eventId = $c['event']['id'];
+    //             $edate = date('Y-m-d H:i:s', strtotime($c['event']['openDate']));
+    //             $teams = $c['market']['runners'];
+    //             $allTeams = array();
+    //             foreach($teams as $t):
+    //                 $obj = new stdClass();
+    //                 $obj->id = $t['selectionId'];
+    //                 $obj->name = $t['runnerName'];
+    //                 $allTeams[] = $obj;
+    //             endforeach;
+    //             $match = $this->Common_model->get_single_query("SELECT * FROM cron_data WHERE market_id = '$marketId'");
+    //             if(!empty($match)) {
+                    
+    //             } else {
+    //                 $data = array(
+    //                     'market_id' => $marketId,
+    //                     'event_id' => $c['event']['id'],
+    //                     'event_name' => $c['event']['name'],
+    //                     'event_date' => $edate,
+    //                     'event_typeid' => 4,
+    //                     'competition_id' => $c['series']['competition']['id'],
+    //                     'competition_name' => $c['series']['competition']['name'],
+    //                     'start_date' => $edate,
+    //                     'btype' => $c['market']['marketName'],
+    //                     'mtype' => $c['market']['marketName'],
+    //                     'teams' => json_encode($allTeams),
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'updated_at' => date('Y-m-d H:i:s'),
+    //                 );
+    //                 $this->Crud_model->insert_record('cron_data', $data);
+    //             }
+    //             $fancies = $this->matchSessionByMatchId($eventId);
+    //             if(!empty($fancies)) {
+    //                 foreach ($fancies as $fk => $f) {
+    //                     $fid = $f['SelectionId'];
+    //                     $fname = $f['RunnerName'];
+    //                     $fan = $this->Common_model->get_single_query("select * from fancy_data where fancy_name = '$fname' and market_id = '$marketId'");
+    //                     if($fan) {
+    //                         continue;
+    //                     }
+    //                     $fdata = array(
+    //                         'fancy_id' => $f['SelectionId'],
+    //                         'fancy_name' => $f['RunnerName'],
+    //                         'market_id' => $marketId,
+    //                         'event_id' => $eventId,
+    //                         'event_name' => $c['event']['name'],
+    //                         'event_date' => $edate,
+    //                         'event_typeid' => 4,
+    //                         'competition_id' => $c['series']['competition']['id'],
+    //                         'competition_name' => $c['series']['competition']['name'],
+    //                         'start_date' => $edate,
+    //                         'mtype' => $c['market']['marketName'],
+    //                         'odds_type' => 'fancy',
+    //                         'status' => $f['GameStatus'],
+    //                         'created_at' => date('Y-m-d H:i:s'),
+    //                         'updated_at' => date('Y-m-d H:i:s'),
+    //                     );
+    //                     $this->Crud_model->insert_record('fancy_data',$fdata);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     echo 'done';
+    // }
 
     public function allSeries() {
         $url = "http://178.79.131.131/api/v1/seriestList?sport_id=4";
@@ -826,5 +861,97 @@ class Crons extends MY_Controller
         $err = curl_error($curl);
         curl_close($curl);
         echo $response;
+    }
+
+    public function matches() {
+        $url = $this->utils->absolute("/apidata/matches.php");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    public function matchesDetails($eventId) {
+        $url = $this->utils->absolute("/apidata/matchdetail.php?eventId=$eventId");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    public function OddByMarketId($marketId)
+    {
+        $url = $this->utils->absolute("apidata/odds.php?marketId=$marketId");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+        var_dump($result);
+        die;
+        // $runners = $result[0]['runners'];
+        // $teams = $this->teamsByMarketId($marketId);
+        // foreach ($runners as $rk => $r) {
+        //     $teams[$rk]->back = $r['back'][0];
+        //     $teams[$rk]->lay = $r['lay'][0]; 
+        // }
+        // $result[0]['teams'] = $teams;
+        // return $result;
+
+    }
+
+    public function matchFancyByMarketId2($marketId)
+    {
+        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=".$marketId;
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+        return $result;
     }
 }

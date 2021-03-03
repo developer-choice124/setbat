@@ -4347,4 +4347,27 @@ class SuperAdmin extends MY_Controller {
             redirect('SuperAdmin/series', 'refresh');
         }
     }
+
+    function editSeries($id, $name){
+        $hdata['title'] = 'SuperAdmin Panel | SetBat';
+        $hdata['heading'] = $this->panel->title;
+        $this->load->view('layout/backend_header', $hdata);
+        $data['series'] = $this->Common_model->get_single_query("SELECT * FROM series where id = $id");
+        $this->load->view('layout/backend_sidebar');
+        $this->load->view('superadmin/editseries', $data);
+        $this->load->view('layout/backend_footer');
+    }
+
+    function updateSeries($id){
+        $data = array(
+            'name' => $this->input->post('name'),
+            'duration' => $this->input->post('duration'),
+            'status' => $this->input->post('status')
+        );
+        $this->db->where('id', $id)->update('series', $data);
+
+        
+        $this->session->set_flashdata('message', $this->ion_auth->messages());
+        redirect("SuperAdmin/editSeries/$id/".$this->input->post('name'), 'refresh');
+    }
 }

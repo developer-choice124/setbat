@@ -3688,7 +3688,7 @@ table.focus-on tbody tr.focused th {
   width: 100%;
 }
 .select2-container-multi .select2-choices {
-  border: 1px solid #border !important;
+  border: 1px solid #000000 !important;
   box-shadow: none !important;
   background-image: none !important;
   border-radius: 3px !important;
@@ -4944,7 +4944,7 @@ ul.list-icons li i {
   color: #fff;
 }
 .editable-table + input.error {
-  border: 1px solid #danger;
+  border: 1px solid #000;
   outline: 0;
   outline-offset: 0;
 }
@@ -15229,7 +15229,8 @@ display: block;
 .Series-tabs .s-tabs input:checked + label {
   background: linear-gradient(#5ba4a4 0%,#4e8c8a 100%);
   z-index: 6;
-  box-shadow: 0 0 33px -6px rgb(84 148 147);
+  /* box-shadow: 0 0 33px -6px rgb(84 148 147); */
+  color: #fff;
 }
 
 .Series-tabs .content {
@@ -15260,4 +15261,8 @@ color: #398080;
     opacity: 1;
     width: 100%;
     transition: all ease-out 0.2s 0.1s;
+}
+
+.text-light{
+  color: #ffffff !important;
 }
