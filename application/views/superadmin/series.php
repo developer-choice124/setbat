@@ -91,12 +91,13 @@
                                                         <td><?=$s['name'];?></td>
                                                         <td><?=$s['duration'];?></td>
                                                         <td><?=$s['status'];?></td>
-                                                        <td></td>
+                                                        <td>
+                                                            <a href="<?= base_url("SuperAdmin/editSeries/"). $s['id']."/". $s['name']; ?>" class="btn btn-info text-light"><i class="fa fa-edit"></i></a>
+                                                        </td>
                                                     </tr>
                                                     <?php
                                                 }
                                             ?>
-                                            
                                         <?php } ?>
                                         </tbody>
                                     </table>
@@ -122,7 +123,9 @@
                                                 <td><?= $s['name']; ?></td>
                                                 <td><?= $s['duration']; ?></td>
                                                 <td><?= $s['status']; ?></td>
-                                                <td></td>
+                                                <td>
+                                                    <a href="<?= base_url("SuperAdmin/editSeries/"). $s['id']."/". $s['name']; ?>" class="btn btn-info text-light"><i class="fa fa-edit"></i></a>
+                                                </td>
                                             </tr>
                                         <?php }} ?>
                                         </tbody>
@@ -148,7 +151,9 @@
                                                 <td><?=$s['name'];?></td>
                                                 <td><?=$s['duration'];?></td>
                                                 <td><?=$s['status'];?></td>
-                                                <td></td>
+                                                <td>
+                                                    <a href="<?= base_url("SuperAdmin/editSeries/"). $s['id']."/". $s['name']; ?>" class="btn btn-info text-light"><i class="fa fa-edit"></i></a>
+                                                </td>
                                             </tr>
                                         <?php } } ?>
                                         </tbody>
@@ -175,7 +180,9 @@
                                                 <td><?=$s['name'];?></td>
                                                 <td><?=$s['duration'];?></td>
                                                 <td><?=$s['status'];?></td>
-                                                <td></td>
+                                                <td>
+                                                    <a href="<?= base_url("SuperAdmin/editSeries/"). $s['id']."/". $s['name']; ?>" class="btn btn-info text-light"><i class="fa fa-edit"></i></a>
+                                                </td>
                                             </tr>
                                         <?php } } ?>
                                         </tbody>

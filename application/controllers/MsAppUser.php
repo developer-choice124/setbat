@@ -150,6 +150,7 @@ class MsAppUser extends MY_Controller {
 		$hdata['heading'] = $this->panel->title;
 		$hdata['cuser'] = $cuser;
 		$showMatch = $this->MsAppUser_model->showMatch();
+		
 		$id = $this->showMatches();
 		if ($showMatch == 'yes') {
 			$matches = array();
@@ -157,7 +158,6 @@ class MsAppUser extends MY_Controller {
 			if ($id) {
 				$matches = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' AND admin_enable = 'yes' AND event_id NOT IN ($id)");
 			} else {
-				echo "kfdhkjdhkjdfj";
 				$matches = $this->Common_model->get_data_by_query("SELECT * FROM running_matches WHERE match_result = 'running' AND admin_enable = 'yes'");
 			}
 

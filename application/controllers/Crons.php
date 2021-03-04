@@ -18,7 +18,75 @@ class Crons extends MY_Controller
         $this->load->library('match');
     }
 
-    public function index() {
+    public function index(){
+        $crickets = $this->matches();
+        
+        foreach($crickets->data as $ck => $c){
+            $details = $this->matchesDetails($c->EventId);
+            
+            $crickets->data[$ck]->detail = $details->data ? $details->data[0] : "";
+        }
+        $today = date('Y-m-d');
+        foreach($crickets->data as $ck => $c){
+            
+            $market_id = $c->detail->MarketId;
+            $edate = date('Y-m-d H:i:s', strtotime($c->detail->MarketTime));
+            $match = $this->Common_model->get_single_query("SELECT * FROM cron_data WHERE market_id =". $market_id);
+            
+            if(!empty($match)) {
+                
+            }else{
+                $data = array(
+                    'market_id' => $market_id,
+                    'event_id' => $c->EventId,
+                    'event_name' => $c->EventName,
+                    'event_date' => $edate,
+                    'event_typeid' => 4,
+                    'competition_id' => "",
+                    'competition_name' => "",
+                    'start_date' => $edate,
+                    'btype' => $c->detail->MarketName,
+                    'mtype' => $c->detail->MarketName,
+                    'teams' => "",
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                );
+                $this->Crud_model->insert_record('cron_data', $data);
+            }
+            $session = $this->matchsessionsByMarketId($c->detail->MarketId);
+            if(!empty($session)) {
+                foreach ($session as $fk => $f) {
+                    $fid = $f['SelectionId'];
+                    $fname = $f['RunnerName'];
+                    $fan = $this->Common_model->get_single_query("select * from fancy_data where fancy_name = '$fname' and market_id = '$market_id'");
+                    
+                    if($fan) {
+                        continue;
+                    }
+                    $fdata = array(
+                        'fancy_id' => $f['SelectionId'],
+                        'fancy_name' => $f['RunnerName'],
+                        'market_id' => $market_id,
+                        'event_id' => $c->EventId,
+                        'event_name' => $c->EventName,
+                        'event_date' => $edate,
+                        'event_typeid' => 4,
+                        'competition_id' => "",
+                        'competition_name' => "",
+                        'start_date' => $edate,
+                        'mtype' => $c->detail->MarketName,
+                        'odds_type' => 'fancy',
+                        'status' => $f['GameStatus'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    );
+                    $this->Crud_model->insert_record('fancy_data',$fdata);
+                }
+            }
+        }
+    }
+
+    /* public function index() {
         $crickets = $this->getAllMatchesSortBySeries();
         $today = date('Y-m-d');
         foreach ($crickets as $ck => $c) {
@@ -87,7 +155,7 @@ class Crons extends MY_Controller
             }
         }
         echo 'done';
-    }
+    } */
 
     public function allSeries() {
         $url = "http://178.79.131.131/api/v1/seriestList?sport_id=4";
@@ -826,5 +894,94 @@ class Crons extends MY_Controller
         $err = curl_error($curl);
         curl_close($curl);
         echo $response;
+    }
+
+    
+    // This Api write in 2021 
+    public function matches() {
+        $url = $this->utils->absolute("/apidata/matches.php");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    
+    // This Api write in 2021 
+    public function matchesDetails($eventId) {
+        $url = $this->utils->absolute("/apidata/matchdetail.php?eventId=$eventId");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    // This Api write in 2021 
+    public function OddByMarketId($marketId)
+    {
+        $url = $this->utils->absolute("/apidata/odds.php?marketId=$marketId");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+        return $result;
+    }
+
+    
+    // This Api write in 2021 
+    public function matchsessionsByMarketId($marketId)
+    {
+        $url = $this->utils->absolute("/apidata/sessions.php?marketId=$marketId");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+        return $result;
     }
 }

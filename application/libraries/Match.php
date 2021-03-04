@@ -360,10 +360,11 @@ class Match
         return $result;
     }
 
-    public function matchOddByMarketId($mkid)
+    // This Api write in 2021 
+    public function matchOddByMarketId($marketId)
     {
         $CI = &get_instance();
-        $url = $CI->utils->absolute("/api/v1/listMarketBookOdds?market_id=" . $mkid);
+        $url = $CI->utils->absolute("/apidata/odds.php?marketId=$marketId");
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -379,15 +380,37 @@ class Match
         $err = curl_error($curl);
         curl_close($curl);
         $result = json_decode($response, true);
-        $runners = $result[0]['runners'];
-        $teams = $this->teamsByMarketId($mkid);
-        foreach ($runners as $rk => $r) {
-            $teams[$rk]->back = $r['ex']['availableToBack'][0];
-            $teams[$rk]->lay = $r['ex']['availableToLay'][0];
-        }
-        $result[0]['teams'] = $teams;
         return $result;
     }
+    
+    // public function matchOddByMarketId($mkid)
+    // {
+    //     $CI = &get_instance();
+    //     $url = $CI->utils->absolute("/api/v1/listMarketBookOdds?market_id=" . $mkid);
+    //     $curl = curl_init();
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => $url,
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => "",
+    //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+    //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+    //         CURLOPT_TIMEOUT => 30000,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => "GET",
+    //     ));
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
+    //     curl_close($curl);
+    //     $result = json_decode($response, true);
+    //     $runners = $result[0]['runners'];
+    //     $teams = $this->teamsByMarketId($mkid);
+    //     foreach ($runners as $rk => $r) {
+    //         $teams[$rk]->back = $r['ex']['availableToBack'][0];
+    //         $teams[$rk]->lay = $r['ex']['availableToLay'][0];
+    //     }
+    //     $result[0]['teams'] = $teams;
+    //     return $result;
+    // }
 
     public function matchFancyByMarketId($mid)
     {
