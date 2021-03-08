@@ -2486,10 +2486,12 @@ class SuperAdmin extends MY_Controller {
         $data['match'] = $this->Common_model->get_single_query("select * from running_matches where market_id = '$mid'");
         $data['odds'] = $this->match->matchOddByMarketId($mid);
         $data['dfancy'] = $this->Common_model->get_data_by_query("SELECT * FROM fancy_data WHERE market_id = '$mid' AND status NOT IN ('settled','paused')");
-        $data['fancy'] = $this->match->matchFancies($eid);
+        $data['fancy'] = $this->match->matchFancies($mid);
         $data['ubets'] = $this->Common_model->get_data_by_query("select * from bet where market_id = '$mid' and bet_type = 'unmatched'");
         $data['mbets'] = $this->Common_model->get_data_by_query("select * from bet where market_id = '$mid' and bet_type = 'matched'");
         $data['fbets'] = $this->Common_model->get_data_by_query("select * from bet where market_id = '$mid' and bet_type = 'fancy'");
+
+       
         $this->load->view('layout/backend_sidebar');
         $this->load->view('superadmin/match_odds', $data);
         $this->load->view('layout/backend_footer');
@@ -2560,19 +2562,23 @@ class SuperAdmin extends MY_Controller {
         $mid = $this->input->get('market_id');
         $match = $this->Common_model->get_single_query("select * from running_matches where market_id = '$mid'");
         $odds = $this->match->matchOddByMarketId($mid);
-        $matchOdds = $odds[0]['teams'];
+        // $matchOdds = $odds[0]['teams'];
         $oddData = '<table class="table table-bordered table-condensed" width="100%" >
                         <tr>
                           <th style="border: none !important;"><b style="color: red;">Min stake:100 Max stake:200000</b></th>
-                          <th style="background: #2c5ca9; color: white; border: none !important; min-width: 50px;  max-width: 50px;"><center>back</center></th>
-                          <th style="background: red; color: white; border: none !important; min-width: 50px; max-width: 50px;"><center>lay</center></th>
+                          <th colspan="3" style="background: #2c5ca9; color: white; border: none !important; min-width: 50px;  max-width: 50px;"><center>back</center></th>
+                          <th colspan="3" style="background: red; color: white; border: none !important; min-width: 50px; max-width: 50px;"><center>lay</center></th>
                         </tr>';
-        foreach ($matchOdds as $mk => $mo) {
+        foreach ($odds as $mk => $mo) {
 
             $oddData .= '<tr>
-                <td><b>' . $mo->name . '</b><span class="pull-right" id="' . $mo->id . '"></span></td>
-                <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo->back['price'] . '</b><br/>' . $mo->back['size'] . '</center></td>
-                <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo->lay['price'] . '</b><br/>' . $mo->lay['size'] . '</center></td>
+                <td><b>' . $mo['RunnerName'] . '</b><span class="pull-right" id="' . $mo['SelectionId'] . '"></span></td>
+                <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo['BackPrice1'] . '</b><br/>' . $mo['BackSize1'] . '</center></td>
+                <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo['BackPrice2'] . '</b><br/>' . $mo['BackSize2'] . '</center></td>
+                <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo['BackPrice3'] . '</b><br/>' . $mo['BackSize3'] . '</center></td>
+                <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo['LayPrice1'] . '</b><br/>' . $mo['LaySize1'] . '</center></td>
+                <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo['LayPrice2'] . '</b><br/>' . $mo['LaySize2'] . '</center></td>
+                <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo['LayPrice3'] . '</b><br/>' . $mo['LaySize3'] . '</center></td>
             </tr>';
         }
         $oddData .= '</table>';

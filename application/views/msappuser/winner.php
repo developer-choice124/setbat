@@ -73,39 +73,42 @@
           </div>
           <div id="matchOdd">
           <?php 
+          
             $runners = $odds[0]['teams'];
             //echo json_encode($runners);die;
             $teams = json_decode($match->teams);
             $teamIds = array();
             foreach ($teams as $tm) {
-              $teamIds[] = $tm->id;
+              $tm = (object) $tm;
+              $teamIds[] = $tm->SelectionId;
             }
             $bprice = 0; $bsize = 0; $lprice = 0; $lsize = 0;
-            foreach ($runners as $rk => $r):
-            $bprice = $r->back ? $r->back['price'] : 0;
-            $bsize = $r->back ? $r->back['size'] : 0;
-            $lprice = $r->lay ? $r->lay['price']: 0;
-            $lsize = $r->lay ? $r->lay['size'] : 0;
+            foreach ($odds as $rk => $r):
+              $r = (object) $r;
+            $bprice = $r->BackPrice1 ? $r->BackPrice1 : 0;
+            $bsize = $r->BackSize1 ? $r->BackSize1 : 0;
+            $lprice = $r->LayPrice1 ? $r->LayPrice1: 0;
+            $lsize = $r->LaySize1 ? $r->LaySize1 : 0;
 
           ?>
             <div class="row">
               <div class="col-6 border">
-                <span class="font-weight-bold pl-1 clearfix"><?=$teams[$rk]->name;?></span>
-                <span id="<?=$teams[$rk]->id;?>" 
+                <span class="font-weight-bold pl-1 clearfix"><?=$r->RunnerName;?></span>
+                <span id="<?=$r->SelectionId;?>" 
                   
                   class="pl-1 font-weight-bold"></span>
               </div>
-              <div class="col-3 text-center border" id="<?=$teams[$rk]->id.'_backParentdiv';?>" style="background: #ffffea;">
+              <div class="col-3 text-center border" id='<?="$r->SelectionId'_backParentdiv'";?>' style="background: #ffffea;">
                 <div 
-                data-others = "<?php echo json_encode($teamIds); ?>" id="<?=$teams[$rk]->id.'_backdiv';?>" onclick="showBackBetDiv('<?=$teams[$rk]->id;?>','<?=$teams[$rk]->name;?>','<?=$rk;?>','back','matched','<?=$bprice;?>','<?=$bsize;?>')">
-                  <span id="<?=$teams[$rk]->id.'_backodd';?>">
+                data-others = "<?php echo json_encode($teamIds); ?>" id='<?="$r->SelectionId'_backdiv'";?>' onclick="showBackBetDiv('<?=$r->SelectionId;?>','<?=$r->RunnerName;?>','<?=$rk;?>','back','matched','<?=$bprice;?>','<?=$bsize;?>')">
+                  <span id='<?="$r->SelectionId'_backodd'";?>'>
                     <center><b><?=$bprice;?></b><br/><?=$bsize;?></center>
                   </span>
                 </div>
               </div>
-              <div class="col-3 text-center border" id="<?=$teams[$rk]->id.'_layParentdiv';?>" style="background: #ffffea;">
-                <div data-others = "<?php echo json_encode($teamIds); ?>" id="<?=$teams[$rk]->id.'_laydiv';?>" onclick="showLayBetDiv('<?=$teams[$rk]->id;?>','<?=$teams[$rk]->name;?>','<?=$rk;?>','lay','matched','<?=$lprice;?>','<?=$lsize;?>')">
-                  <span id="<?=$teams[$rk]->id.'_layodd';?>">
+              <div class="col-3 text-center border" id='<?="$r->SelectionId'_layParentdiv'";?>' style="background: #ffffea;">
+                <div data-others = "<?php echo json_encode($teamIds); ?>" id='<?="$r->SelectionId'_laydiv'";?>' onclick="showLayBetDiv('<?=$r->SelectionId;?>','<?=$r->RunnerName;?>','<?=$rk;?>','lay','matched','<?=$lprice;?>','<?=$lsize;?>')">
+                  <span id='<?="$r->SelectionId'_layodd'";?>'>
                     <center><b><?=$lprice;?></b><br/><?=$lsize;?></center>
                   </span>
                 </div>

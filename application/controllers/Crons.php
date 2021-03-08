@@ -927,11 +927,8 @@ class Crons extends MY_Controller
         echo $response;
     }
 
-<<<<<<< HEAD
     
     // This Api write in 2021 
-=======
->>>>>>> 2b19e4b29651857b4fc76bbf8feaf97a274e81d3
     public function matches() {
         $url = $this->utils->absolute("/apidata/matches.php");
         $curl = curl_init();
@@ -952,11 +949,8 @@ class Crons extends MY_Controller
         return json_decode($response);
     }
 
-<<<<<<< HEAD
     
     // This Api write in 2021 
-=======
->>>>>>> 2b19e4b29651857b4fc76bbf8feaf97a274e81d3
     public function matchesDetails($eventId) {
         $url = $this->utils->absolute("/apidata/matchdetail.php?eventId=$eventId");
         $curl = curl_init();
@@ -977,16 +971,10 @@ class Crons extends MY_Controller
         return json_decode($response);
     }
 
-<<<<<<< HEAD
     // This Api write in 2021 
     public function OddByMarketId($marketId)
     {
         $url = $this->utils->absolute("/apidata/odds.php?marketId=$marketId");
-=======
-    public function OddByMarketId($marketId)
-    {
-        $url = $this->utils->absolute("apidata/odds.php?marketId=$marketId");
->>>>>>> 2b19e4b29651857b4fc76bbf8feaf97a274e81d3
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -1002,7 +990,6 @@ class Crons extends MY_Controller
         $err = curl_error($curl);
         curl_close($curl);
         $result = json_decode($response, true);
-<<<<<<< HEAD
         return $result;
     }
 
@@ -1011,24 +998,6 @@ class Crons extends MY_Controller
     public function matchsessionsByMarketId($marketId)
     {
         $url = $this->utils->absolute("/apidata/sessions.php?marketId=$marketId");
-=======
-        var_dump($result);
-        die;
-        // $runners = $result[0]['runners'];
-        // $teams = $this->teamsByMarketId($marketId);
-        // foreach ($runners as $rk => $r) {
-        //     $teams[$rk]->back = $r['back'][0];
-        //     $teams[$rk]->lay = $r['lay'][0]; 
-        // }
-        // $result[0]['teams'] = $teams;
-        // return $result;
-
-    }
-
-    public function matchFancyByMarketId2($marketId)
-    {
-        $url = "http://178.79.131.131/api/v1/listMarketBookSession?market_id=".$marketId;
->>>>>>> 2b19e4b29651857b4fc76bbf8feaf97a274e81d3
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,

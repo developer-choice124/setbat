@@ -62,12 +62,13 @@ class Winner extends MY_Controller
         $match = $this->Common_model->get_single_query("select * from running_matches where market_id = '$mkid'");
         $odds = $this->match->matchOddByMarketId($mkid);
         //$res = $this->plReload($mkid,$mid,$odds);
-        $runners = $odds[0]['teams'];
+        // $runners = $odds[0]['teams'];
         $teams = json_decode($match->teams);
         // echo json_encode($teams);die;
         // print_r($runners);die;
         $teamIds = array();
         foreach ($teams as $tm) {
+            $tm = (object) $tm;
             $teamIds[] = $tm->id;
         }
         $bprice = 0;
@@ -75,11 +76,13 @@ class Winner extends MY_Controller
         $lprice = 0;
         $lsize = 0;
         // $data = "";
-        foreach ($runners as $rk => $r) :
-            $bprice = $r->back ? $r->back['price'] : 0;
-            $bsize = $r->back ? $r->back['size'] : 0;
-            $lprice = $r->lay ? $r->lay['price'] : 0;
-            $lsize = $r->lay ? $r->lay['size'] : 0;
+        foreach ($odds as $rk => $r) :
+            $r = (object) $r;
+            $bprice = $r->BackPrice1 ? $r->BackPrice1 : 0;
+            $bsize = $r->BackSize1 ? $r->BackSize1 : 0;
+            $lprice = $r->LayPrice1 ? $r->LayPrice1: 0;
+            $lsize = $r->LaySize1 ? $r->LaySize1 : 0;
+
             $untid = $teams[$rk]->id;
             //unmatched check
             if (!empty($bprice)) {
@@ -113,25 +116,25 @@ class Winner extends MY_Controller
             //end unmatched check
             //$class = $res[$rk]['pl'] >= 0 ? 'text-success' : 'text-danger';
 
-            $backy = "showBackBetDiv('" . $teams[$rk]->id . "','" . $teams[$rk]->name . "','" . $rk . "','back','matched','" . $bprice . "','" . $bsize . "')";
-            $layy = "showLayBetDiv('" . $teams[$rk]->id . "','" . $teams[$rk]->name . "','" . $rk . "','lay','matched','" . $lprice . "','" . $lsize . "')";
+            $backy = "showBackBetDiv('" . $r->SelectionId . "','" . $r->RunnerName . "','" . $rk . "','back','matched','" . $bprice . "','" . $bsize . "')";
+            $layy = "showLayBetDiv('" . $r->SelectionId . "','" . $r->RunnerName . "','" . $rk . "','lay','matched','" . $lprice . "','" . $lsize . "')";
             $data .= '<div class="row">
               <div class="col-6 border">
-                <span class="font-weight-bold pl-1 clearfix">' . $teams[$rk]->name . '</span>
-                <span id="' . $teams[$rk]->id . '" 
+                <span class="font-weight-bold pl-1 clearfix">' . $r->RunnerName . '</span>
+                <span id="' . $r->SelectionId . '" 
                   class="pl-1 font-weight-bold "></span>
               </div>
-              <div class="col-3 text-center border" id="' . $teams[$rk]->id . '_backParentdiv" style="background: #ffffea; cursor:pointer;">
+              <div class="col-3 text-center border" id="' . $r->SelectionId . '_backParentdiv" style="background: #ffffea; cursor:pointer;">
                 <div 
-                data-others = "' . json_encode($teamIds) . '" id="' . $teams[$rk]->id . '_backdiv" onclick="' . $backy . '">
-                  <span id="' . $teams[$rk]->id . '_backodd">
+                data-others = "' . json_encode($teamIds) . '" id="' . $r->SelectionId . '_backdiv" onclick="' . $backy . '">
+                  <span id="' . $r->SelectionId . '_backodd">
                     <center><b>' . $bprice . '</b><br/>' . $bsize . '</center>
                   </span>
                 </div>
               </div>
-              <div class="col-3 text-center border" id="' . $teams[$rk]->id . '_layParentdiv" style="background: #ffffea; cursor:pointer;">
-                <div data-others = "' . json_encode($teamIds) . '" id="' . $teams[$rk]->id . '_laydiv" onclick="' . $layy . '">
-                  <span id="' . $teams[$rk]->id . '_layodd">
+              <div class="col-3 text-center border" id="' . $r->SelectionId . '_layParentdiv" style="background: #ffffea; cursor:pointer;">
+                <div data-others = "' . json_encode($teamIds) . '" id="' . $r->SelectionId . '_laydiv" onclick="' . $layy . '">
+                  <span id="' . $r->SelectionId . '_layodd">
                     <center><b>' . $lprice . '</b><br/>' . $lsize . '</center>
                   </span>
                 </div>
@@ -173,7 +176,7 @@ class Winner extends MY_Controller
         $data = '';
         $did = array();
         foreach ($dfancy as $dkey => $d) {
-            $did[] = $d['fancy_id'];
+            $did[] = $d['SelectionId'];
         }
         if ($fancy) {
             foreach ($fancy as $fk => $f) {

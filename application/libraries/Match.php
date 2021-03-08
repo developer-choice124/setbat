@@ -437,6 +437,28 @@ class Match
     public function matchFancies($mid)
     {
         $CI = &get_instance();
+        $url = $CI->utils->absolute("/apidata/sessions.php?marketId=$mid");
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false),
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response, true);
+        return $result;
+    }
+    
+    /* public function matchFancies($mid)
+    {
+        $CI = &get_instance();
         $url = $CI->utils->absolute("/api/v1/listMarketBookSession?match_id=" . $mid);
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -460,7 +482,7 @@ class Match
             }
         }
         return $a;
-    }
+    } */
 
     public function oldmatchFancyByMarketId($marketId)
     {
