@@ -1699,7 +1699,7 @@ class SuperMaster extends MY_Controller
         $mid = $this->input->get('market_id');
         $match = $this->Common_model->get_single_query("select * from running_matches where market_id = '$mid'");
         $dfancy = $this->Common_model->get_data_by_query("SELECT * FROM fancy_data WHERE market_id = '$mid' AND status NOT IN ('settled','paused')");
-        $fancy = $this->match->matchFancies($match->event_id);
+        $fancy = $this->match->matchFancies($mid);
         $fancyData = '<table class="table table-bordered" width="100%">
         <tr>
         <th style="border: none !important;" width="50%"></th>

@@ -54,6 +54,7 @@ class Crons extends MY_Controller
                 $this->Crud_model->insert_record('cron_data', $data);
             }
             $session = $this->matchsessionsByMarketId($c->detail->MarketId);
+            
             if(!empty($session)) {
                 foreach ($session as $fk => $f) {
                     $fid = $f['SelectionId'];

@@ -171,12 +171,12 @@ class Winner extends MY_Controller
     public function fancyReload($mkid, $mid)
     {
         $dfancy = $this->Common_model->get_data_by_query("SELECT * FROM fancy_data WHERE market_id = '$mkid' AND status NOT IN ('settled','paused')");
-        $fancy = $this->match->matchFancies($mid);
+        $fancy = $this->match->matchFancies($mkid);
         // start
         $data = '';
         $did = array();
         foreach ($dfancy as $dkey => $d) {
-            $did[] = $d['SelectionId'];
+            $did[] = $d['fancy_id'];
         }
         if ($fancy) {
             foreach ($fancy as $fk => $f) {

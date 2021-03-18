@@ -26,25 +26,6 @@
                 </div>
                 <div class="panel-body">
                     <div id="infoMessage"><?php if($this->session->flashdata('message')) { echo $this->session->flashdata('message'); }?></div>
-                    <form action="<?=base_url('SuperAdmin/addUser');?>" method="post" class="form-horizontal">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <input type="text" name="identity" class="form-control form-control-line" placeholder="please enter username here" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="text" name="full_name" class="form-control form-control-line" placeholder="please enter user full name">
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="number" name="commission" min="0" max="100" class="form-control form-control-line" placeholder="Commission in (%)">
-                                </div>
-                                <div class="col-md-3">
-                                    <center><button type="submit" class="btn btn-darkblue">submit</button></center>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <hr>
                     <div class="table-responsive">
                         <table id="allusers" class="table table-condensed" >
                             <thead>

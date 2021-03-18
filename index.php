@@ -4,7 +4,7 @@ session_start();
 // ini_set('session.use_strict_mode', 1);
 // ini_set('session.use_cookies', 1);
 // ini_set('session.use_only_cookies', 1);
-date_default_timezone_set('Asia/Kolkata');
+// date_default_timezone_set('Asia/Kolkata');
 include_once 'functions.php';
 define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
 switch (ENVIRONMENT) {
