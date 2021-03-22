@@ -46,7 +46,10 @@
                                     <td><?=date('D d-M-Y H:i:sa',strtotime($c['start_date']));?></td>
                                     <td><?=$c['competition_name'];?></td>
                                     <td><?=$c['mtype'];?></td>
-                                    <td><a href="<?=base_url('SuperAdmin/enableBetting?event_id='.$c['event_id']);?>">Enable Betting</a></td>
+                                    <td>
+                                      <a href="<?=base_url('SuperAdmin/enableBetting?event_id=' . $c['event_id']);?>">Enable Betting</a> &nbsp;&nbsp;&nbsp;&nbsp; </br>
+                                      <a href="<?=base_url('SuperAdmin/editMatch?match_id=' . $c['event_id'])?>"><i class="ti-pencil-alt" data-toggle="tooltip" title="Edit"></i></a> &nbsp;&nbsp;
+                                    </td>
                                   </tr>
                                 <?php endforeach;?>
                             </tbody>

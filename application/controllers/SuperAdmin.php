@@ -2411,6 +2411,52 @@ class SuperAdmin extends MY_Controller {
         $this->load->view('layout/backend_footer');
     }
 
+    public function editMatch()
+    {
+        
+        $hdata['title'] = 'SuperAdmin Panel | SetBat';
+        $hdata['heading'] = $this->panel->title;
+        $this->load->view('layout/backend_header', $hdata);
+        $data['csrf'] = $this->_get_csrf_nonce();
+        $match_id = $this->input->get('match_id');
+        if(!$match_id){
+            redirect('SuperAdmin/allCricket', 'refresh');
+        }
+
+        $data['match'] = $this->Common_model->get_single_query("SELECT * FROM cron_data where event_id = $match_id");
+
+        $data['series'] = $this->Common_model->get_data_by_query("SELECT * FROM series");
+
+        $this->load->view('layout/backend_sidebar');
+        $this->load->view('superadmin/Editcricket', $data);
+        $this->load->view('layout/backend_footer');
+    }
+    public function updateMatch($id){
+        $this->form_validation->set_rules('event_name', 'event name', 'required');
+        $this->form_validation->set_rules('market_id', 'market id', 'required');
+        $this->form_validation->set_rules('event_id', 'event id', 'required');
+        if ($this->form_validation->run() == true) {
+            
+            $data = array(
+                'event_name' => $this->input->post('event_name'),
+                'market_id' => $this->input->post('market_id'),
+                'event_id' => $this->input->post('event_id'),
+                'series_id' => $this->input->post('series_id')
+            );
+            
+            $result = $this->Crud_model->edit_record('cron_data', $id, $data);
+            if($result){
+                $this->session->set_flashdata('message', $this->ion_auth->messages());
+                redirect('SuperAdmin/allCricket', 'refresh');
+            }
+        } else {
+            $this->session->set_flashdata('message', validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+            redirect("SuperAdmin/editMatch?match_id=".$this->input->post('event_id'), 'refresh');
+        }
+    
+        // $this->db->where('id', $id)->update('users', $data);
+    }
+
     public function saveCricbuzzId() {
 
         $id = $this->input->get('id');

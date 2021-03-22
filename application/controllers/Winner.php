@@ -192,6 +192,14 @@ class Winner extends MY_Controller {
 						$yes = "";
 						$no = "";
 						$showMsg = '<div class="overlay">' . $f['GameStatus'] . '</div>';
+						$data .= '<div class="row">
+                                <div class="col-6 border pt-2">' . $f['RunnerName'] . '</div>
+                                <div class="col-3 text-center border" style="background: #ffffea; cursor:pointer;" >' . $showMsg . '
+                                  <b>' . $f['LayPrice1'] . '</b><br/>' . $f['LaySize1'] . '</div>
+                                <div class="col-3 text-center border" style="background: #ffffea;cursor:pointer;"
+                                  >' . $showMsg . '
+                                  <b>' . $f['BackPrice1'] . '</b><br/>' . $f['BackSize1'] . '</div>
+                              </div>';
 					}
 				}
 			}
