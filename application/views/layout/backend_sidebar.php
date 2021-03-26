@@ -2,13 +2,6 @@
 <!-- Left navbar-header -->
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse slimscrollsidebar">
-        <div class="user-profile">
-            <div class="dropdown user-pro-body">
-                <div><img src="<?= base_url('assets/plugins/images/white.svg') ?>" height="48" alt="betcric"></div>
-                <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?= ucwords(strtolower($this->Common_model->findfield('users', 'id', $id, 'full_name'))); ?></a>
-
-            </div>
-        </div>
         <?php if($this->ion_auth->is_superadmin()) { ?>
             <ul class="nav" id="side-menu">
                 <li><a href="<?= base_url('SuperAdmin/index') ?>" class="waves-effect"><i class="linea-icon linea-basic fa-fw" data-icon="v"></i> <span class="hide-menu">Dashboard</span></a></li>

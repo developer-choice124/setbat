@@ -73,7 +73,7 @@ class MsAuth extends CI_Controller
 
         // redirect them to the login page
         $this->session->set_flashdata('message', "<div class='alert alert-success alert-dismissable'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>".$this->ion_auth->messages()."</div>");
-        redirect('MsAuth/login', 'refresh');
+        redirect('auth/login', 'refresh');
     }
 
     public function _render_page($view, $data=null, $returnhtml=false)//I think this makes more sense

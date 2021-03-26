@@ -392,8 +392,6 @@
   }
 
   function getBookedFancy(runner, mid) {
-    console.log(runner);
-    console.log(mid);
     $.ajax({
       url: "<?php echo site_url('Admin/getBookedFancy?runner='); ?>" + runner + "&market_id=" + mid,
       type: "POST",

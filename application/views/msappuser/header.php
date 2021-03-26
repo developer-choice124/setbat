@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SetBat Exchange</title>
+    <title>Grey Exchange</title>
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('app_assets/images/favicon.png'); ?>">
     <!-- google font -->
     <link href="<?= base_url(); ?>app_assets/fonts.googleapis.com/css6079.css?family=Poppins:300,400,500,600,700" rel="stylesheet" type="text/css" />
@@ -34,12 +34,10 @@
         <header class="main-header">
             <div class="container_header">
                 <div class="logo d-flex align-items-center">
-                    <a href="#">
-                        <span class="logo-default">
-                            <img src="<?= base_url('app_assets/images/setbat-logo.png'); ?>"> </span> </a>
                     <div class="icon_menu full_menu">
                         <a href="#" class="menu-toggler sidebar-toggler"></a>
                     </div>
+					<span style="margin-left: 50px;color: #2c5ca9 !important;">GREYEXCH</span>
                 </div>
                 <div class="right_detail">
                     <div class="row d-flex align-items-center min-h pos-md-r">
@@ -75,9 +73,6 @@
         <!-- header_End -->
         <!-- Content_right -->
         <div class="container_full">
-            <marquee class="bg-primary">
-                <h3 class="text-white"><?= $heading ?></h3>
-            </marquee>
             <!-- Modal -->
             <div id="stakeModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">

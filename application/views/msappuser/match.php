@@ -18,7 +18,7 @@
       z-index: 1000;
   }
 </style>
-<div class="container-fluid no-gutters">
+<div class="container-fluid no-gutters in-play-ss">
   <div class="row">
     <div class="col-md-12"> 
       <!-- Nav tabs -->
@@ -38,11 +38,8 @@
           </li>
         </ul>
         <div class="card-header bg-primary text-white">
-          <i class="fa fa-star-o"></i>&nbsp; <?=$match->event_name;?>
-        </div>
-        <div class="card-header bg-white">
-          <span class="text-success">In-play</span>&nbsp;Match Odds
-          <span class="float-right"><?=date('D Y-M-d H:i:s A');?></span>
+          <?=$match->event_name;?>
+		  <span class="float-right"><?=date('D Y-M-d H:i:s A');?></span>
         </div>
         <!-- Tab panes -->
         <div class="card-body" style="padding: 0 !important;">
@@ -50,12 +47,12 @@
           <div id="betMessage"></div>
           <div class="row">
             <div class="col-6 border">
-              <span class="text-danger font-weight-bold">Min Stake:&nbsp;200<br/>Max Stake:&nbsp;500000</span>
+             
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #2c5ca9;">
+            <div class="col-3 text-white text-center font-weight-bold border lagai-ss">
               <center>Lagai</center>
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #EF8279;">
+            <div class="col-3 text-white text-center font-weight-bold border khai-ss">
               <center>Khai</center>
             </div>
           </div>
@@ -78,10 +75,10 @@
           ?>
             <div class="row">
               <div class="col-6 border">
-                <span class="font-weight-bold pl-1 clearfix"><?=$teams[$rk]->name;?></span>
+                <span class="font-weight-bold pl-1 clearfix align-ss"><?=$teams[$rk]->name;?></span>
                 <span id="<?=$teams[$rk]->id.'_pl';?>" 
                   
-                  class="pl-1 font-weight-bold"></span>
+                  class="pl-1 font-weight-bold align-ss"></span>
               </div>
               <div class="col-3 text-center border" id="<?=$teams[$rk]->id.'_backParentdiv';?>" style="background: #ffffea;">
                 <div 

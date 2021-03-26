@@ -84,7 +84,7 @@
                     <?php } ?>
                     
                      <li class="dropdown">
-                        <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><span class="hidden-xs"></span> <i class="icon-options-vertical"></i></a>
+                        <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><span class="hidden-xs"></span> <?= ucwords(strtolower($this->Common_model->findfield('users', 'id', $this->session->userdata('user_id'), 'full_name'))); ?>  <i class="icon-options-vertical"></i></a>
                         <ul class="dropdown-menu animated bounceInDown">
                           <?php  $id = $this->session->userdata('user_id'); 
                           $ug = $this->Common_model->findfield('users_with_groups','id',$id,'group_name');
@@ -99,12 +99,12 @@
                     
                     <!-- /.dropdown -->
                 </ul>
-           <center><h3 style="color: white;"><?=$title;?></h3></center> 
+            <h4 style="color: white;LINE-HEIGHT: 40PX;display: inline-block;">GREYEXCH</h4> 
             </div>
             <!-- /.navbar-header -->
             <!-- /.navbar-top-links -->
             <!-- /.navbar-static-side -->
         </nav>
-        <marquee class="bg-dark text-white">
+        <!--marquee class="bg-dark text-white">
             <h3 class="text-white"><?=$heading;?></h3>
-        </marquee>
+        </marquee-->

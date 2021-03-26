@@ -1,12 +1,12 @@
 <?php
 
 class Utils {
-
+	
 	public function absolute($s) {
 		// return 'http://178.79.136.190:3111'.$s;
 		// return 'http://178.79.144.196'.$s;
 		// return 'http://178.62.105.201'.$s;
 		// return 'http://142.93.36.1'.$s;
-		return 'http://18.207.33.74' . $s;
+		return 'http://18.207.33.74'.$s;
 	}
 }

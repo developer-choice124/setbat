@@ -36,11 +36,8 @@
           </li>
         </ul>
         <div class="card-header bg-primary text-white">
-          <i class="fa fa-star-o"></i>&nbsp; India Vs Bangladesh
-        </div>
-        <div class="card-header bg-white clearfix">
-          <span class="text-success">Unmatched Bets</span>
-          <span class="float-right"><?=date('D Y-M-d H:i:s A');?></span>
+          &nbsp; <?=$match->event_name;?>
+          <span class="float-right"><?=date('d M-y H:i A', strtotime($match->event_date));?></span>
         </div>
         <div class="card-body bg-white">
           <div id="message"></div>

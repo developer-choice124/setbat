@@ -2440,6 +2440,7 @@ class Admin extends MY_Controller {
 		}
 		$fancyData .= '</table>';
 		$data = array('score' => '', 'fancy' => $fancyData);
+
 		echo json_encode($data);
 	}
 
@@ -2448,15 +2449,15 @@ class Admin extends MY_Controller {
 		$match = $this->Common_model->get_single_query("select * from running_matches where market_id = '$mid'");
 		$odds = $this->match->matchOddByMarketId($mid);
 		// $matchOdds = $odds[0]['teams'];
-        $oddData = '<table class="table table-bordered table-condensed" width="100%" >
+		$oddData = '<table class="table table-bordered table-condensed" width="100%" >
                         <tr>
                           <th style="border: none !important;"><b style="color: red;">Min stake:100 Max stake:200000</b></th>
                           <th colspan="3" style="background: #2c5ca9; color: white; border: none !important; min-width: 50px;  max-width: 50px;"><center>back</center></th>
                           <th colspan="3" style="background: red; color: white; border: none !important; min-width: 50px; max-width: 50px;"><center>lay</center></th>
                         </tr>';
-        foreach ($odds as $mk => $mo) {
+		foreach ($odds as $mk => $mo) {
 
-            $oddData .= '<tr>
+			$oddData .= '<tr>
                 <td><b>' . $mo['RunnerName'] . '</b><span class="pull-right" id="' . $mo['SelectionId'] . '"></span></td>
                 <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo['BackPrice1'] . '</b><br/>' . $mo['BackSize1'] . '</center></td>
                 <td style="background: #b5e0ff; cursor: pointer;"><center><b>' . $mo['BackPrice2'] . '</b><br/>' . $mo['BackSize2'] . '</center></td>
@@ -2465,8 +2466,8 @@ class Admin extends MY_Controller {
                 <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo['LayPrice2'] . '</b><br/>' . $mo['LaySize2'] . '</center></td>
                 <td style="background: #ffbfcd; cursor: pointer;" ><center><b>' . $mo['LayPrice3'] . '</b><br/>' . $mo['LaySize3'] . '</center></td>
             </tr>';
-        }
-        $oddData .= '</table>';
+		}
+		$oddData .= '</table>';
 		echo $oddData;
 	}
 
@@ -2502,15 +2503,15 @@ class Admin extends MY_Controller {
 			}
 
 			echo '<tr class="' . $class . '">
-	                            <td>' . $ub['team'] . '</td>
-	                            <td>' . $ub['back_lay'] . '</td>
-	                            <td>' . $ub['odd'] . '</td>
-	                            <td>' . $ub['stake'] . '</td>
-	                            <td>' . $ub['profit'] . '</td>
-	                            <td>' . $ub['loss'] . '</td>
-	                            <td>' . $ub['ip'] . '</td>
-	                            <td>' . $ub['id'] . '</td>
-	                          </tr>';
+			                            <td>' . $ub['team'] . '</td>
+			                            <td>' . $ub['back_lay'] . '</td>
+			                            <td>' . $ub['odd'] . '</td>
+			                            <td>' . $ub['stake'] . '</td>
+			                            <td>' . $ub['profit'] . '</td>
+			                            <td>' . $ub['loss'] . '</td>
+			                            <td>' . $ub['ip'] . '</td>
+			                            <td>' . $ub['id'] . '</td>
+			                          </tr>';
 		endforeach;
 		echo '</table>
                     </div>
@@ -2537,15 +2538,15 @@ class Admin extends MY_Controller {
 			}
 
 			echo '<tr class="' . $class . '">
-	                            <td>' . $mb['team'] . '</td>
-	                            <td>' . $mb['back_lay'] . '</td>
-	                            <td>' . $mb['odd'] . '</td>
-	                            <td>' . $mb['stake'] . '</td>
-	                            <td>' . $mb['profit'] . '</td>
-	                            <td>' . $mb['loss'] . '</td>
-	                            <td>' . $mb['ip'] . '</td>
-	                            <td>' . $mb['id'] . '</td>
-	                          </tr>';
+			                            <td>' . $mb['team'] . '</td>
+			                            <td>' . $mb['back_lay'] . '</td>
+			                            <td>' . $mb['odd'] . '</td>
+			                            <td>' . $mb['stake'] . '</td>
+			                            <td>' . $mb['profit'] . '</td>
+			                            <td>' . $mb['loss'] . '</td>
+			                            <td>' . $mb['ip'] . '</td>
+			                            <td>' . $mb['id'] . '</td>
+			                          </tr>';
 		endforeach;
 		echo '</table>
                     </div>
@@ -2572,15 +2573,15 @@ class Admin extends MY_Controller {
 			}
 
 			echo '<tr class="' . $class . '">
-	                            <td>' . $fb['team'] . '</td>
-	                            <td>' . $fb['back_lay'] . '</td>
-	                            <td>' . $fb['odd'] . '</td>
-	                            <td>' . $fb['stake'] . '</td>
-	                            <td>' . $fb['profit'] . '</td>
-	                            <td>' . $fb['loss'] . '</td>
-	                            <td>' . $fb['ip'] . '</td>
-	                            <td>' . $fb['id'] . '</td>
-	                          </tr>';
+			                            <td>' . $fb['team'] . '</td>
+			                            <td>' . $fb['back_lay'] . '</td>
+			                            <td>' . $fb['odd'] . '</td>
+			                            <td>' . $fb['stake'] . '</td>
+			                            <td>' . $fb['profit'] . '</td>
+			                            <td>' . $fb['loss'] . '</td>
+			                            <td>' . $fb['ip'] . '</td>
+			                            <td>' . $fb['id'] . '</td>
+			                          </tr>';
 		endforeach;
 		echo '</table>
                     </div>
@@ -2773,11 +2774,11 @@ class Admin extends MY_Controller {
                 <tbody>';
 		foreach ($p_l as $plk => $p):
 			echo '<tr>
-	                    <td>' . $p['username'] . '</td>
-	                    <td><span class="' . $p['team1_cl'] . '">' . $p['team1_pl'] . '</span></td>
-	                    <td><span class="' . $p['team2_cl'] . '">' . $p['team2_pl'] . '</span></td>
-	                    <td>0</td>
-	                  </tr>';
+			                    <td>' . $p['username'] . '</td>
+			                    <td><span class="' . $p['team1_cl'] . '">' . $p['team1_pl'] . '</span></td>
+			                    <td><span class="' . $p['team2_cl'] . '">' . $p['team2_pl'] . '</span></td>
+			                    <td>0</td>
+			                  </tr>';
 		endforeach;
 		echo '</tbody>
               </table>';

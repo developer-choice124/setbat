@@ -932,7 +932,7 @@ body {
 	list-style: none;
 	text-shadow: none;
 	padding: 0;
-	background-color: #2c3e50;
+	background-color: #130e48;
 	-webkit-border-radius: 2px;
 	border: none;
 	box-shadow: 0 3px 14px rgba(0, 0, 0, .1) !important;
@@ -4671,12 +4671,12 @@ background: #452978;
 }
 @media (min-width: 992px){
 .nav_small .dark_blue .sidebar-menu li:hover>.down_menu {
-	  background: linear-gradient( 29deg, #2c3e50 0%, #130e4899 100%)
+	  background: linear-gradient( 29deg, #130e48 0%, #130e4899 100%)
 
 }
 }
 .side_bg_img{
-	    background: #2c3e50;
+	    background: #130e48;
 }
 .side_bg_img::before{
 	display: none;
@@ -4687,7 +4687,8 @@ background: #452978;
 
 
 .side_bg_img .mCSB_container:before {
-    background: #2c3e50;
+    background: linear-gradient( 29deg, #130e48 0%, #130e4899 100%);
+    opacity: 0.75;
     content: '';
     position: absolute;
     top: 0;
@@ -4817,8 +4818,3 @@ width:45%;
 .in-play-ss .khai-ss{background: #faa9ba;}
 .lagai-ss center, .khai-ss center{line-height: 16px;padding-top: 5px;padding-bottom: 5px;color: #000;}
 .in-play-ss .align-ss{display: inline-block; line-height:47px;}
-.in-play-ss .team-ss{background: #e5e9ec;border:1px solid #fff !important;line-height: 34px;padding-left: 20px;}
-.in-play-ss .lagai-khai-ss{line-height: 16px;padding-top: 5px;}
-.in-play-ss .heading-ss{line-height: 36px;display: inline-block;}
-.in-play-ss .heading-ss center{line-height: 26px;}
-.in-play-ss .overlay{height:auto;width: 50%;margin-left: 51%;line-height: 43px;text-align: center;background-color: #53505f61;text-transform: uppercase;}

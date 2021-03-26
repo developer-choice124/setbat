@@ -8,7 +8,7 @@
 <meta name="title" content="Admin Login | SetBat">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Admin Login | SetBat</title>
+<title>GREYEXCH</title>
 <link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url('assets/plugins/images/favicon.png')?>">
 
 <!-- Bootstrap Core CSS -->
@@ -36,7 +36,7 @@
   <div class="login-box">
     <div class="black-box">
       <form class="form-horizontal form-material" id="loginform" action="<?php base_url('auth/login')?>" method="POST">
-        <center><h3 class="box-title m-b-20"> <?php echo "SetBat | Login Panel";?></h3></center>
+        <center><h3 class="box-title m-b-20" style="font-size: 22px;"> <?php echo "GREYEXCH";?></h3></center>
         <!--h3 class="box-title m-b-20"> <?php echo lang('login_heading');?></h3-->
         <h4><div id="infoMessage"><?php echo $message;?></div></h4>
         <div class="form-group ">
@@ -59,7 +59,7 @@
         </div-->
         <div class="form-group text-center m-t-20">
           <div class="col-xs-12">
-            <button class="btn btn-darkblue btn-lg btn-block text-uppercase text-white waves-effect waves-light" type="submit"><?php echo lang('login_heading');?></button>
+            <button class="btn btn-darkblue btn-lg btn-block text-uppercase text-white waves-effect waves-light" type="submit"><?php echo lang('login_heading');?> <i class="fa fa-sign-in"></i></button>
           </div>
         </div>
         <!--div class="row">

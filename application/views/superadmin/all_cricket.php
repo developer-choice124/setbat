@@ -1,7 +1,7 @@
-<script src="<?php echo base_url('assets/backend/js/jquery-3.3.1.min.js')?>"></script>
+<script src="<?php echo base_url('assets/backend/js/jquery-3.3.1.min.js') ?>"></script>
 <style type="text/css">
   .headings{
-    background: #2c5ca9 !important;
+    background: #2c3e50 !important;
     color: #fff;
   }
   .headings th {
@@ -11,7 +11,7 @@
 </style>
 <div class="container-fluid">
     <div class="row bg-title">
-        
+
     </div>
     <!-- .row -->
     <div class="row">
@@ -23,8 +23,8 @@
                 </div>
                 <div class="panel-body">
                     <div><?php if ($this->session->flashdata('message')) {
-                          echo $this->session->flashdata('message');
-                        } ?>
+	echo $this->session->flashdata('message');
+}?>
                     </div>
                     <div class="table-responsive" id="divtlimit">
                         <table id="allusers" class="table table-condensed" >
@@ -39,11 +39,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 1; foreach($crickets as $c):?>
+                                <?php $i = 1;foreach ($crickets as $c): ?>
                                   <tr>
                                     <td><?=$i++;?></td>
                                     <td><?=$c['event_name'];?></td>
-                                    <td><?=date('D d-M-Y H:i:sa',strtotime($c['start_date']));?></td>
+                                    <td><?=date('D d-M-Y H:i:sa', strtotime($c['start_date']));?></td>
                                     <td><?=$c['competition_name'];?></td>
                                     <td><?=$c['mtype'];?></td>
                                     <td>

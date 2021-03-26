@@ -93,9 +93,9 @@
             <!-- /.navbar-top-links -->
             <!-- /.navbar-static-side -->
         </nav>
-        <marquee class="bg-info text-white">
+        <!--marquee class="bg-info text-white">
             <h3 class="text-white"><?=$heading?></h3>
-        </marquee>
+        </marquee-->
 
 <!-- Modal -->
 <div id="stakeModal" class="modal fade" role="dialog">

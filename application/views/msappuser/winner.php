@@ -30,7 +30,7 @@
     text-align: left;
   }
 </style>
-<div class="container-fluid no-gutters">
+<div class="container-fluid no-gutters in-play-ss">
   <div class="row">
     <div class="col-md-12"> 
       <!-- Nav tabs -->
@@ -50,11 +50,8 @@
           </li>
         </ul>
         <div class="card-header bg-primary text-white">
-          <i class="fa fa-star-o"></i>&nbsp; <?=$match->event_name;?>
-        </div>
-        <div class="card-header bg-white">
-          <span class="text-success">In-play</span>&nbsp;Match Odds
-          <span class="float-right"><?=date('D Y-M-d H:i:s A');?></span>
+          &nbsp; <?=$match->event_name;?>
+          <span class="float-right"><?=date('d M-y H:i A', strtotime($match->event_date));?></span>
         </div>
         <!-- Tab panes -->
         <div class="card-body" style="padding: 0 !important;">
@@ -62,13 +59,13 @@
           <div id="betMessage"></div>
           <div class="row">
             <div class="col-6 border">
-              <span class="text-danger font-weight-bold">Min Stake:&nbsp;100<br/>Max Stake:&nbsp;500000</span>
+              
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #2c5ca9;">
-              <center>Lagai</center>
+            <div class="col-3 text-white text-center font-weight-bold border lagai-ss">
+              <center>BACK<br />(Lagai)</center>
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #EF8279;">
-              <center>Khai</center>
+            <div class="col-3 text-white text-center font-weight-bold border khai-ss">
+              <center>LAY<br />(Khai)</center>
             </div>
           </div>
           <div id="matchOdd">
@@ -93,10 +90,10 @@
           ?>
             <div class="row">
               <div class="col-6 border">
-                <span class="font-weight-bold pl-1 clearfix"><?=$r->RunnerName;?></span>
+                <span class="font-weight-bold pl-1 clearfix align-ss"><?=$r->RunnerName;?></span>
                 <span id="<?=$r->SelectionId;?>" 
                   
-                  class="pl-1 font-weight-bold"></span>
+                  class="pl-1 font-weight-bold  align-ss"></span>
               </div>
               <div class="col-3 text-center border" id='<?="$r->SelectionId'_backParentdiv'";?>' style="background: #ffffea;">
                 <div 
@@ -207,19 +204,19 @@
       </div>
       <!-- Match Fancy  -->
       <div class="card border">
-        <div class="card-body" style="padding: 0 !important;">
+        <div class="card-body" style="padding: 0 !important;margin-top: 8px;">
           <div class="row">
-            <div class="col-6 border">
-              <span class="text-danger font-weight-bold">Session</span>
+            <div class="col-6 border heading-ss">
+              <span class="text-danger font-weight-bold">Fancy(Session)</span>
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #EF8279;">
-              <center>No</center>
+            <div class="col-3 text-white text-center font-weight-bold border khai-ss heading-ss">
+              <center>NO</center>
             </div>
-            <div class="col-3 text-white text-center font-weight-bold border" style="background: #2c5ca9;">
-              <center>Yes</center>
+            <div class="col-3 text-white text-center font-weight-bold border lagai-ss heading-ss">
+              <center>YES</center>
             </div>
           </div>
-          <div id="matchFancy" style="max-height: 200px;overflow-y: scroll;">
+          <div id="matchFancy" style="max-height: 400px;overflow-y: scroll;">
             
           </div>
         </div>

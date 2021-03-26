@@ -113,18 +113,18 @@ class Winner extends MY_Controller {
 			$backy = "showBackBetDiv('" . $r->SelectionId . "','" . $r->RunnerName . "','" . $rk . "','back','matched','" . $bprice . "','" . $bsize . "')";
 			$layy = "showLayBetDiv('" . $r->SelectionId . "','" . $r->RunnerName . "','" . $rk . "','lay','matched','" . $lprice . "','" . $lsize . "')";
 			$data .= '<div class="row">
-										<div class="col-6 border">
-											<span class="font-weight-bold pl-1 clearfix">' . $r->RunnerName . '</span>
+										<div class="col-6 border team-ss">
+											<span class="font-weight-bold pl-1 clearfix align-ss">' . $r->RunnerName . '</span>
 											<span id="' . $r->SelectionId . '" class="pl-1 font-weight-bold "></span>
 										</div>
-										<div class="col-3 text-center border" id="' . $r->SelectionId . '_backParentdiv" style="background: #ffffea;cursor:pointer;">
+										<div class="col-3 text-center border lagai-ss" id="' . $r->SelectionId . '_backParentdiv" style="cursor:pointer;">
 										 <div  data-others = "' . json_encode($teamIds) . '" id="' . $r->SelectionId . '_backdiv" onclick="' . $backy . '">
 										    <span id="' . $r->SelectionId . '_backodd">
 										      <center><b>' . $bprice . '</b><br/>' . $bsize . '</center>
 										    </span>
 										  </div>
 										</div>
-										<div class="col-3 text-center border" id="' . $r->SelectionId . '_layParentdiv" style="background: #ffffea; cursor:pointer;">
+										<div class="col-3 text-center border khai-ss" id="' . $r->SelectionId . '_layParentdiv" style="cursor:pointer;">
 										  <div data-others = "' . json_encode($teamIds) . '" id="' . $r->SelectionId . '_laydiv" onclick="' . $layy . '">
 										    <span id="' . $r->SelectionId . '_layodd">
 										      <center><b>' . $lprice . '</b><br/>' . $lsize . '</center>
@@ -181,24 +181,21 @@ class Winner extends MY_Controller {
 						$no = "showLayBetDiv('" . $f['SelectionId'] . "','" . $f['RunnerName'] . "','" . $fk . "','lay','fancy','" . $lprice . "','" . $lsize . "')";
 						$showMsg = '';
 						$data .= '<div class="row">
-                                <div class="col-6 border pt-2">' . $f['RunnerName'] . '</div>
-                                <div class="col-3 text-center border" style="background: #ffffea; cursor:pointer;" onclick="' . $no . '">' . $showMsg . '
+                                <div class="col-6 border pt-2 team-ss">' . $f['RunnerName'] . '</div>
+                                <div class="col-3 text-center border khai-ss lagai-khai-ss" style="cursor:pointer;" onclick="' . $no . '">
                                   <b>' . $f['LayPrice1'] . '</b><br/>' . $f['LaySize1'] . '</div>
-                                <div class="col-3 text-center border" style="background: #ffffea;cursor:pointer;"
-                                  onclick="' . $yes . '">' . $showMsg . '
+                                <div class="col-3 text-center border lagai-ss lagai-khai-ss" style="cursor:pointer;"
+                                  onclick="' . $yes . '">
                                   <b>' . $f['BackPrice1'] . '</b><br/>' . $f['BackSize1'] . '</div>
                               </div>';
 					} else {
 						$yes = "";
 						$no = "";
 						$showMsg = '<div class="overlay">' . $f['GameStatus'] . '</div>';
-						$data .= '<div class="row">
-                                <div class="col-6 border pt-2">' . $f['RunnerName'] . '</div>
-                                <div class="col-3 text-center border" style="background: #ffffea; cursor:pointer;" >' . $showMsg . '
-                                  <b>' . $f['LayPrice1'] . '</b><br/>' . $f['LaySize1'] . '</div>
-                                <div class="col-3 text-center border" style="background: #ffffea;cursor:pointer;"
-                                  >' . $showMsg . '
-                                  <b>' . $f['BackPrice1'] . '</b><br/>' . $f['BackSize1'] . '</div>
+						$data .= '<div class="row">'.$showMsg.'
+                                <div class="col-6 border pt-2 team-ss">' . $f['RunnerName'] . '</div>
+                                <div class="col-3 text-center border khai-ss lagai-khai-ss"></div>
+                                <div class="col-3 text-center border lagai-ss lagai-khai-ss"></div>
                               </div>';
 					}
 				}
