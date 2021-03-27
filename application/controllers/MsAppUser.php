@@ -15,6 +15,13 @@ class MsAppUser extends MY_Controller {
 			date_default_timezone_set("Asia/Kolkata");
 		}
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
+		$username = $this->session->userdata('username');
+		$session_id = $this->session->userdata('session_id');
+		$check = $this->Common_model->get_single_query("SELECT * FROM users WHERE username='$username' AND currentsessionid='$session_id'");
+		if(empty($check) && sizeof($check) === 0){
+			$this->ion_auth->logout();
+			redirect('MsAuth/login');
+		}
 		$this->lang->load('auth');
 		if (!$this->ion_auth->logged_in()) {
 			redirect('MsAuth/login');
@@ -22,6 +29,7 @@ class MsAppUser extends MY_Controller {
 		if (!$this->ion_auth->is_user()) {
 			redirect('Auth');
 		}
+		
 		$this->id = $this->session->userdata('user_id');
 		$this->panel = $this->Common_model->get_single_query("SELECT * FROM panel_title ORDER BY id DESC");
 	}
@@ -146,6 +154,7 @@ class MsAppUser extends MY_Controller {
 	}
 
 	public function crickets() {
+		
 		$cuser = $this->MsAppUser_model->index();
 		$hdata['heading'] = $this->panel->title;
 		$hdata['cuser'] = $cuser;
